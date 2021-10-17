@@ -35,7 +35,7 @@
 
 DetectorConstruction::DetectorConstruction(): G4VUserDetectorConstruction()//, Detector_Geometry_("APA")
 {
-  // messenger_ = new G4GenericMessenger(this, "/Inputs/", "Set the geometry.");
+   //messenger_ = new G4GenericMessenger(this, "/Inputs/", "Set the geometry.");
   // messenger_->DeclareProperty("Geometry", Detector_Geometry_,  "which geometry?");
 }
 
@@ -53,7 +53,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // G4Material* world_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
   G4Material* world_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_lAr");
-  // world_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::OpticalLAr());
+  world_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::OpticalLAr());
 
   // G4Material* world_mat = MaterialsList::OLAr();
   // world_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::OpticalLAr());
@@ -83,7 +83,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Material* detector_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_lAr");
 
   // G4Material* detector_mat = MaterialsList::CopyMaterial( world_mat, 'OpticalLAr');
-  // detector_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::OpticalLAr());
+   detector_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::OpticalLAr());
 
   // G4MaterialPropertiesTable* mpt = detector_mat->GetMaterialPropertiesTable();
   // for (int i=0; i<100; ++i){G4cout << "MAT" <<"\t"<< mpt->GetConstProperty("IONIZATIONENERGY") <<  G4endl;} 
@@ -93,7 +93,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   G4LogicalVolume* detector_logic_vol =
     new G4LogicalVolume(detector_solid_vol, detector_mat, "detector.logical");
-  // G4LogicalVolume* detector_logic_vol =
+  detector_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+
+    // G4LogicalVolume* detector_logic_vol =
   //   new G4LogicalVolume(detector_solid_vol, world_mat, "detector.logical");
 
   // G4ThreeVector offset(0, 0, z_half);
@@ -119,7 +121,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // new G4PVPlacement(yRot, atta_offset,
   //                   atta_logic_vol, "atta.physical", world_logic_vol, false, 0, true);
-
 
 
   // LIGHT TUBE ////////////////////////////////////////////

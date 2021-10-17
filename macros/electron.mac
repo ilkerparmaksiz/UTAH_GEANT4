@@ -4,19 +4,18 @@
 /tracking/verbose 0
 
 # output path
-/Inputs/root_output /media/ilker/writable/QPIX/Co60_3cm.root
+/Inputs/root_output /home/ilker/Projects/UTAH_GEANT4/output/Co60_3cm.root
  
 # make unstable isotopes decay at t=0
 /Inputs/decay_at_time_zero true  # this is set to false by default
 
-# initialize run
-#/run/initialize
+
 /random/setSeeds 0 31
 
 # particle type
-/gps/particle ion
 
-/gps/ion 27 60 0 0 # Co 60
+/gps/particle e-
+
 
 # spherical volume source
 /gps/pos/type Volume
@@ -25,7 +24,5 @@
 /gps/pos/radius 0.01 mm
 
 # energy distribution
-/gps/ene/mono 0.01 eV
+/gps/energy 300 MeV
 
-# run
-#/run/beamOn 2

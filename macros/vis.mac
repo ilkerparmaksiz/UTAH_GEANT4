@@ -45,19 +45,6 @@
 /vis/modeling/trajectories/create/drawByCharge
 /vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
 /vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
-
-# Many other options are available with /vis/modeling and /vis/filtering.
-# For example, to select colour by particle ID:
-/vis/modeling/trajectories/create/drawByParticleID
-/vis/modeling/trajectories/drawByParticleID-0/set e- red
-/vis/modeling/trajectories/drawByParticleID-0/set e+ blue
-/vis/modeling/trajectories/drawByParticleID-0/set nu_e white
-/vis/modeling/trajectories/drawByParticleID-0/set anti_nu_e white
-/vis/modeling/trajectories/drawByParticleID-0/set geantino white
-/vis/modeling/trajectories/drawByParticleID-0/set gamma blue
-/vis/modeling/trajectories/drawByParticleID-0/set alpha yellow
-/vis/modeling/trajectories/drawByParticleID-0/set GenericIon grey
-/vis/modeling/trajectories/drawByParticleID-0/set opticalphoton green
 # (if too many tracks cause core dump => /tracking/storeTrajectory 0)
 #
 # Draw hits at end of event:

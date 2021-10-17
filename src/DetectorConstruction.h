@@ -26,7 +26,7 @@ private:
 
   G4MaterialPropertiesTable* GetMyPhotOptSurf();
 
-  // G4GenericMessenger * messenger_;
+   //G4GenericMessenger * messenger_;
   // G4String Detector_Geometry_;
 
 };
