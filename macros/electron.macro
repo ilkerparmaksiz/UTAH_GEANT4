@@ -1,13 +1,13 @@
 # set verbosity
 /control/verbose 1
 /run/verbose 1
-/tracking/verbose 1
+/tracking/verbose 0
 
 # output path
-/Inputs/root_output /Users/austinmcdonald/projects/UTAH/Q_PIX_GEANT4/output/electron.root
+/Inputs/root_output /home/ilker/Projects/UTATPC/output/Co60_3cm.root
 
 # initialize run
-/run/initialize
+#/run/initialize
 /random/setSeeds 0 31
 
 # limit radioactive decay chains
@@ -29,4 +29,4 @@
 /gps/ene/mono 2 MeV
 
 # run
-/run/beamOn 1
+#/run/beamOn 1

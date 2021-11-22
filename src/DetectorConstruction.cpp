@@ -53,7 +53,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // G4Material* world_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
   G4Material* world_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_lAr");
-  world_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::OpticalLAr());
+  //world_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::OpticalLAr());
 
   // G4Material* world_mat = MaterialsList::OLAr();
   // world_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::OpticalLAr());
@@ -80,9 +80,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double phi_max  = 2*M_PI;
 
 
-  G4Material* detector_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_lAr");
+  //G4Material* detector_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_lAr");
 
-  // G4Material* detector_mat = MaterialsList::CopyMaterial( world_mat, 'OpticalLAr');
+   G4Material* detector_mat = MaterialsList::CopyMaterial( world_mat, 'OpticalLAr');
    detector_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::OpticalLAr());
 
   // G4MaterialPropertiesTable* mpt = detector_mat->GetMaterialPropertiesTable();
@@ -126,7 +126,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // LIGHT TUBE ////////////////////////////////////////////
   G4double teflon_thickn_ = 2*cm;
   G4double tpb_thickn_    = 1*micrometer;
-  G4double r_inner  = r_max; 
+  G4double r_inner  = r_max;
   G4double r_outter = r_inner + teflon_thickn_;
 
   // THE TEFLON //
@@ -224,8 +224,8 @@ void DetectorConstruction::ConstructSDandField()
   TrackingSD* tracking_sd = new TrackingSD("/G4QPIX/TRACKING", "TrackingHitsCollection");
   G4SDManager::GetSDMpointer()->AddNewDetector(tracking_sd);
 
-  G4LogicalVolume* detector_logic_vol =
-    G4LogicalVolumeStore::GetInstance()->GetVolume("detector.logical");
+  //G4LogicalVolume* detector_logic_vol =G4LogicalVolumeStore::GetInstance()->GetVolume("detector.logical");
+  G4LogicalVolume* detector_logic_vol =G4LogicalVolumeStore::GetInstance()->GetVolume("world.logical");
 
   SetSensitiveDetector(detector_logic_vol, tracking_sd);
 

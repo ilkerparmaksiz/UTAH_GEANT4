@@ -11,10 +11,12 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
+#include <cmath>
+#include <iostream>
 
 // Header file for the classes stored in the TTree if any.
 #include "vector"
-#include "vector"
+
 
 class Ana {
 public :
@@ -88,6 +90,7 @@ public :
    vector<double>  *phit_end_y;
    vector<double>  *phit_end_z;
    vector<double>  *phit_end_t;
+   Double_t r=4.6; //cm
 
    // List of branches
    TBranch        *b_run;   //!
@@ -140,7 +143,7 @@ public :
    TBranch        *b_hit_start_z;   //!
    TBranch        *b_hit_start_t;   //!
    TBranch        *b_hit_end_x;   //!
-   TBranch        *b_hit_end_y;   //!
+   TBranch        *b_hit_end_y;   //!er the machine get
    TBranch        *b_hit_end_z;   //!
    TBranch        *b_hit_end_t;   //!
    TBranch        *b_hit_energy_deposit;   //!
@@ -164,6 +167,9 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
+
+    virtual double  Distance(double x,double y);
+    virtual vector<double> arange (double start,double end, double increments);
 };
 
 #endif
@@ -174,9 +180,9 @@ Ana::Ana(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/media/ilker/writable/QPIX/Co60_3cm.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/home/ilker/Projects/UTATPC/output/Gamma.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/media/ilker/writable/QPIX/Co60_3cm.root");
+         f = new TFile("/home/ilker/Projects/UTATPC/output/Gamma.root");
       }
       f->GetObject("event_tree",tree);
 
@@ -375,4 +381,27 @@ Int_t Ana::Cut(Long64_t entry)
 // returns -1 otherwise.
    return 1;
 }
+
+
+
+vector<double> Ana::arange(double start,double end, double increments)
+    {
+    vector<double> result;
+    for (start;start<end;start+=increments){
+        result.push_back(start);
+    }
+
+    return result;
+}
+
+double Ana::Distance(double x,double y){
+    Double_t dist=0;
+
+    dist=sqrt(x*x+y*y);
+
+    return dist;
+}
+
+
+
 #endif // #ifdef Ana_cxx
