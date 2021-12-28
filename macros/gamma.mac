@@ -4,7 +4,7 @@
 /tracking/verbose 0
 
 # output path
-/Inputs/root_output /home/ilker/Projects/UTATPC/output/Gammav2.root
+/Inputs/root_output /home/ilker/Projects/UTATPC/output/GammaCs137100k.root
  
 # make unstable isotopes decay at t=0
 /Inputs/decay_at_time_zero true  # this is set to false by default
@@ -24,5 +24,5 @@
 /gps/pos/radius 0.01 mm
 
 # energy distribution
-/gps/energy 1.5 MeV
+/gps/energy 0.6617 MeV
 

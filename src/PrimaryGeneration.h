@@ -26,10 +26,10 @@ class PrimaryGeneration : public G4VUserPrimaryGeneratorAction
 {
 
   public:
-
     PrimaryGeneration();
     virtual ~PrimaryGeneration();
     virtual void GeneratePrimaries(G4Event*);
+    virtual void GENIEGeneratePrimaries(G4Event*);
 
   protected:
 

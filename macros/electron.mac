@@ -4,7 +4,7 @@
 /tracking/verbose 0
 
 # output path
-/Inputs/root_output /home/ilker/Projects/UTATPC/output/Co60_3cm.root
+/Inputs/root_output /home/ilker/Projects/UTATPC/output/Co60_3cmv2.root
  
 # make unstable isotopes decay at t=0
 /Inputs/decay_at_time_zero true  # this is set to false by default
