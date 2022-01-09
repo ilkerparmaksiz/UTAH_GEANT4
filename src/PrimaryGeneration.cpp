@@ -45,7 +45,6 @@ PrimaryGeneration::PrimaryGeneration()
   msg_->DeclareProperty("Particle_Type", Particle_Type_,  "which particle?");
   msg_->DeclareProperty("decay_at_time_zero", decay_at_time_zero_,
                         "Set to true to make unstable isotopes decay at t=0.");
-  msg_->DeclareProperty("Particle_infoRoot_Path",Particle_infoRoot_Path,"This is used when particle info must be read from root file typically from GENIE");
 
   particle_gun_ = new G4GeneralParticleSource();
 
@@ -68,8 +67,6 @@ void PrimaryGeneration::GeneratePrimaries(G4Event* event)
 {
   // get MC truth manager
   MCTruthManager * mc_truth_manager = MCTruthManager::Instance();
-  
-
   if (Particle_Type_ ==  "SUPERNOVA")
   {
     // super->Get_Detector_Dimensions(detector_length_x_, detector_length_y_, detector_length_z_);
@@ -80,7 +77,7 @@ void PrimaryGeneration::GeneratePrimaries(G4Event* event)
   {
     // this->MARLEYGeneratePrimaries(event);
   } else if(Particle_Type_=="GENIE"){
-     this->GENIEGeneratePrimaries(event);
+     //this->GENIEGeneratePrimaries(event);
   }
 
   else

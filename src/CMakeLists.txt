@@ -1,3 +1,4 @@
+
 ## ---------------------------------------------------------
 ##  G4_QPIX | src/CMakeLists.txt
 ##
@@ -7,24 +8,23 @@
 ## ---------------------------------------------------------
 
 SET(SRC   AnalysisManager.cpp
-          GeneratorParticle.cpp
-          MCTruthManager.cpp
-          MCParticle.cpp
-          DetectorConstruction.cpp
-          PrimaryGeneration.cpp
-          RunAction.cpp
-          EventAction.cpp
-          SteppingAction.cpp
-          TrackingAction.cpp
-          TrackingSD.cpp
-          TrackingHit.cpp
-          OpticalMaterialProperties.cpp
-          LiquidArgonProperties.cpp
-          MaterialsList.cpp
-          PmtHit.cpp
-          PmtSD.cpp
-          GenericPhotosensor.cpp
-)
+        GeneratorParticle.cpp
+        MCTruthManager.cpp
+        MCParticle.cpp
+        DetectorConstruction.cpp
+        PrimaryGeneration.cpp
+        RunAction.cpp
+        EventAction.cpp
+        SteppingAction.cpp
+        TrackingAction.cpp
+        TrackingSD.cpp
+        TrackingHit.cpp
+        OpticalMaterialProperties.cpp
+        LiquidArgonProperties.cpp
+        MaterialsList.cpp
+        PmtHit.cpp
+        PmtSD.cpp
+        GenericPhotosensor.cpp
+        )
 
 add_library(${CMAKE_PROJECT_NAME} OBJECT ${SRC})
-

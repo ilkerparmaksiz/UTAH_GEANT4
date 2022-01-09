@@ -1,0 +1,31 @@
+# set verbosity
+/control/verbose 1
+/run/verbose 1
+/tracking/verbose 0
+
+# output path
+/Inputs/root_output /home/ilker/Projects/UTATPC/output/Co60_3cm.root
+
+# make unstable isotopes decay at t=0
+/Inputs/decay_at_time_zero true  # this is set to false by default
+
+# initialize run
+#/run/initialize
+/random/setSeeds 0 31
+
+# particle type
+/gps/particle ion
+
+/gps/ion 241 97 0 0 # Am-241 (1 microcurie --> 37000 Decays/s(Bq) )
+
+# spherical volume source
+/gps/pos/type Volume
+/gps/pos/shape Sphere
+/gps/pos/centre -6.7. 0. 0. cm
+/gps/pos/radius 0.01 mm
+
+# energy distribution
+/gps/ene/mono 0.01 eV
+
+# run
+#/run/beamOn 2
