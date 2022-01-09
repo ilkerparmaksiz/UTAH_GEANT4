@@ -3,7 +3,6 @@
 //
 
 #include "GeneratorForDiffusion.h"
-#include "DetectorConstructForDiffusion.h"
 
 // Q-Pix includes
 #include "MCTruthManager.h"
@@ -31,8 +30,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-GeneratorForDiffusion::GeneratorForDiffusion(): G4VUserPrimaryGeneratorAction(),
-          particle_gun_(0),
+GeneratorForDiffusion::GeneratorForDiffusion(): G4VPrimaryGenerator(),
           atomic_number_(0),
           atomic_mass_(0),
           energy_level_(0.),
@@ -51,7 +49,9 @@ GeneratorForDiffusion::GeneratorForDiffusion(): G4VUserPrimaryGeneratorAction(),
     msg_->DeclareProperty("Region",region_,"Source Region");
     msg_->DeclareProperty("decay_at_time_zero", decay_at_time_zero_,"Set to true to make unstable isotopes decay at t=0.");
 
-    // Load the detector geometry, which will be used for the generation of vertices
+    // Obtaining the detector information
+    detconst = dynamic_cast<const DetectorConstructForDiffusion*>
+    (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
 }
 
 GeneratorForDiffusion::~GeneratorForDiffusion()
@@ -122,7 +122,7 @@ GeneratorForDiffusion::~GeneratorForDiffusion()
     mc_truth_manager->AddFinalGeneratorParticle(particle);
 
 
-}
+}*/
 G4ParticleDefinition * GeneratorForDiffusion::IonDefinition() {
     G4ParticleDefinition * pdef= G4IonTable::GetIonTable()->GetIon(atomic_number_,atomic_mass_,energy_level_);
     if (!pdef) G4Exception("GeneratorForDiffusion","IonDefinition()",FatalException,"Could not find the ion");
@@ -137,7 +137,7 @@ G4ParticleDefinition * GeneratorForDiffusion::IonDefinition() {
     if (decay_at_time_zero_ && !(pdef->GetPDGStable())) pdef->SetPDGLifeTime(1.*ps);
 
     return pdef;
-}*/
+}
 void GeneratorForDiffusion::GeneratePrimaryVertex(G4Event* event)
 {
 
@@ -179,7 +179,11 @@ void GeneratorForDiffusion::EventsWithWindow(G4Event*event,G4double decay_time){
     G4PrimaryParticle* ion = new G4PrimaryParticle(pdef);
 
     // Generate an initial position for the ion using the geometry
-    G4ThreeVector position = DetectorConstructForDiffusion::GetPosition();
+    G4ThreeVector position = detconst->GetPosition();
+    G4cout<<"Source Position"<<G4endl;
+    G4cout<<"("<<position[0]<<position[1]<<position[2]<<")"<<G4endl;
+
+    //G4ThreeVector position  (0,0,0);
     // Ion generated at the start-of-event time
     // Create a new vertex
     //G4cout<<"ParticlePosition " <<position<< " DecayTime "<< decay_time<<G4endl;

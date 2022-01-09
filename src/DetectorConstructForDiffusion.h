@@ -4,7 +4,9 @@
 
 #ifndef G4QPIX_DETECTORCONSTRUCTFORDIFFUSION_H
 #define G4QPIX_DETECTORCONSTRUCTFORDIFFUSION_H
+
 #include "G4VUserDetectorConstruction.hh"
+#include "G4ThreeVector.hh"
 
 
 class G4Material;
@@ -14,14 +16,16 @@ class G4MaterialPropertiesTable;
 class DetectorConstructForDiffusion: public G4VUserDetectorConstruction {
 public:
 
+
     DetectorConstructForDiffusion();
 
     virtual ~DetectorConstructForDiffusion();
 
+     G4ThreeVector  GetPosition() const{return vtx_;};
 
 private:
-    G4VPhysicalVolume *Construct();
 
+    G4VPhysicalVolume *Construct();
     void ConstructSDandField();
 
     G4MaterialPropertiesTable *GetMyPhotOptSurf();
@@ -48,6 +52,7 @@ private:
 
     G4double phi_min = 0.0;
     G4double phi_max = 2 * M_PI;
+     G4ThreeVector vtx_;
 
 };
 

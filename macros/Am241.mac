@@ -13,19 +13,20 @@
 #/run/initialize
 /random/setSeeds 0 31
 
-# particle type
-/gps/particle ion
+#Am 241
+/Inputs/atomic_number 97
+/Inputs/mass_number 241
+# 1 microcurie --> 37000 Decays/s(Bq)
+/Inputs/decay_rate 1000 nCi
+/Inputs/event_window 0
+#works only if event_window is zero
+#/Generator/CrabSourceGenerator/NDecays 39
 
-/gps/ion 241 97 0 0 # Am-241 (1 microcurie --> 37000 Decays/s(Bq) )
+#GEOMETRY
 
-# spherical volume source
-/gps/pos/type Volume
-/gps/pos/shape Sphere
-/gps/pos/centre -6.7. 0. 0. cm
-/gps/pos/radius 0.01 mm
+# GENERATOR
+/Generator/CrabSourceGenerator/region LAB
+
 
 # energy distribution
 /gps/ene/mono 0.01 eV
-
-# run
-#/run/beamOn 2

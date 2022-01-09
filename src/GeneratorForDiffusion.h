@@ -6,23 +6,23 @@
 #define G4QPIX_GENERATORFORDIFFUSION_H
 
 // GEANT4 includes
-#include "G4VUserPrimaryGeneratorAction.hh"
-
+#include <G4VPrimaryGenerator.hh>
 #include "G4Box.hh"
 #include "G4Event.hh"
 #include "G4GeneralParticleSource.hh"
 #include "G4ParticleTable.hh"
 #include "G4String.hh"
+#include "DetectorConstructForDiffusion.h"
 
 
 class G4ParticleDefinition;
 class G4GenericMessenger;
 
-class GeneratorForDiffusion : public G4VUserPrimaryGeneratorAction{
+class GeneratorForDiffusion : public G4VPrimaryGenerator{
 public:
     GeneratorForDiffusion();
-    virtual ~GeneratorForDiffusion();
-    virtual void GeneratePrimaries(G4Event*);
+     ~GeneratorForDiffusion();
+    //virtual void GeneratePrimaries(G4Event*);
     //virtual void GENIEGeneratePrimaries(G4Event*);
 
     // This method is invoked at the beginning of the event,
@@ -49,12 +49,12 @@ private:
     G4String Detector_Geometry_;
     G4double decay_time_;
 
-    G4GeneralParticleSource * particle_gun_;
 
     double detector_length_x_;
     double detector_length_y_;
     double detector_length_z_;
     G4Box* detector_solid_vol_;
+    const DetectorConstructForDiffusion* detconst;
 };
 
 #endif //G4QPIX_GENERATORFORDIFFUSION_H

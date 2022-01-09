@@ -12,8 +12,8 @@ SET(SRC   AnalysisManager.cpp
         MCTruthManager.cpp
         MCParticle.cpp
         DetectorConstructForDiffusion.cpp
-        DetectorConstruction.cpp
         GeneratorForDiffusion.cpp
+        DetectorConstruction.cpp
         PrimaryGeneration.cpp
         RunAction.cpp
         EventAction.cpp

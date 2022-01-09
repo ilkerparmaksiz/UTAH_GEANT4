@@ -44,7 +44,8 @@ DetAct_rmax_(2.6*cm),
 DetAct_z_(10*cm),
 SourceHolder_rmin_(0),
 SourceHolder_rmax_(1*cm),
-SourceHolder_z_(3*mm)
+SourceHolder_z_(3*mm),
+vtx_(0,0,0)
 {
 
     msg_ = new G4GenericMessenger(this, "/Input/", "Control commands of the ion primary generator.");
@@ -61,7 +62,7 @@ SourceHolder_z_(3*mm)
     msg_->DeclareProperty("SourceHolder_rmin",SourceHolder_rmin_ ,  "Starting radius for SourceHolder");
     msg_->DeclareProperty("SourceHolder_rmax",SourceHolder_rmax_ ,  "Final radius for SourceHolder");
     msg_->DeclareProperty("SourceHolder_z",SourceHolder_z_ ,  "length of SourceHolder");
-    //msg_->DeclareProperty("vtx",offset,"Source Position");
+    msg_->DeclareProperty("vtx",vtx_,"Source Position");
 }
 
 
@@ -94,6 +95,7 @@ G4VPhysicalVolume * DetectorConstructForDiffusion::Construct() {
     detector_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
 
     G4ThreeVector offset(0, 0, 0.);
+    //vtx_=offset;
     new G4PVPlacement(0, offset,detector_logic_vol, "detector.physical", world_logic_vol, false, 0, true);
 
 
