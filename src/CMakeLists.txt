@@ -11,7 +11,9 @@ SET(SRC   AnalysisManager.cpp
         GeneratorParticle.cpp
         MCTruthManager.cpp
         MCParticle.cpp
+        DetectorConstructForDiffusion.cpp
         DetectorConstruction.cpp
+        GeneratorForDiffusion.cpp
         PrimaryGeneration.cpp
         RunAction.cpp
         EventAction.cpp
@@ -25,6 +27,7 @@ SET(SRC   AnalysisManager.cpp
         PmtHit.cpp
         PmtSD.cpp
         GenericPhotosensor.cpp
+
         )
 
 add_library(${CMAKE_PROJECT_NAME} OBJECT ${SRC})

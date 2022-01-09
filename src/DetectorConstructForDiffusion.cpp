@@ -2,13 +2,15 @@
 // Created by ilker on 1/4/22.
 //
 #include "DetectorConstructForDiffusion.h"
-#include "MaterialsList.h"
 #include "TrackingSD.h"
 #include "OpticalMaterialProperties.h"
-
+#include "MaterialsList.h"
 // #include "GenericPhotosensor.h"
 #include "PmtSD.h"
 
+
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Units/PhysicalConstants.h>
 
 #include "G4Box.hh"
 #include "G4Tubs.hh"
@@ -26,9 +28,6 @@
 #include "G4LogicalBorderSurface.hh"
 #include "G4RotationMatrix.hh"
 
-#include <CLHEP/Units/PhysicalConstants.h>
-#include <CLHEP/Units/SystemOfUnits.h>
-
 
 
 // Construct
@@ -45,7 +44,7 @@ DetAct_rmax_(2.6*cm),
 DetAct_z_(10*cm),
 SourceHolder_rmin_(0),
 SourceHolder_rmax_(1*cm),
-SourceHolder_z_(3*mm),
+SourceHolder_z_(3*mm)
 {
 
     msg_ = new G4GenericMessenger(this, "/Input/", "Control commands of the ion primary generator.");
@@ -62,7 +61,7 @@ SourceHolder_z_(3*mm),
     msg_->DeclareProperty("SourceHolder_rmin",SourceHolder_rmin_ ,  "Starting radius for SourceHolder");
     msg_->DeclareProperty("SourceHolder_rmax",SourceHolder_rmax_ ,  "Final radius for SourceHolder");
     msg_->DeclareProperty("SourceHolder_z",SourceHolder_z_ ,  "length of SourceHolder");
-    //msg_->DeclareProperty("vtx",vtx_,"Source Position");
+    //msg_->DeclareProperty("vtx",offset,"Source Position");
 }
 
 
@@ -112,7 +111,7 @@ G4VPhysicalVolume * DetectorConstructForDiffusion::Construct() {
     G4Tubs* SourceHolder_solid_vol = new G4Tubs("SourceHolder.solid", SourceHolder_rmin_, SourceHolder_rmin_, SourceHolder_z_, phi_min, phi_max);
     G4LogicalVolume* SourceHolder_logic_vol = new G4LogicalVolume(SourceHolder_solid_vol, SourceHolderMat, "SourceHolder.logical");
     SourceHolder_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    new G4PVPlacement(0, vtx_,SourceHolder_logic_vol, "SourceHolder.physical", detector_logic_vol, false, 0, true);
+    new G4PVPlacement(0, offset,SourceHolder_logic_vol, "SourceHolder.physical", detector_logic_vol, false, 0, true);
 
     return world_phys_vol;
 }
