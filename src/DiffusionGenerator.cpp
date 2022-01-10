@@ -2,7 +2,10 @@
 // Created by ilker on 1/5/22.
 //
 
-#include "GeneratorForDiffusion.h"
+#include "DiffusionGenerator.h"
+#include "BaseGeometry.h"
+#include "DetectorConstruction.h"
+#include "FactoryBase.h"
 
 // Q-Pix includes
 #include "MCTruthManager.h"
@@ -30,36 +33,41 @@
 #include <stdlib.h>
 #include <math.h>
 
-GeneratorForDiffusion::GeneratorForDiffusion(): G4VPrimaryGenerator(),
-          atomic_number_(0),
-          atomic_mass_(0),
-          energy_level_(0.),
-          decay_at_time_zero_(false),
-          Event_window_(0),
-          N_Decays_per_s_(0.),
-          region_(""),
-          NDecays(1)//,
+REGISTER_CLASS(DiffusionGenerator, G4VPrimaryGenerator)
+
+DiffusionGenerator::DiffusionGenerator(): G4VPrimaryGenerator(),
+                                          atomic_number_(0),
+                                          atomic_mass_(0),
+                                          energy_level_(0.),
+                                          decay_at_time_zero_(false),
+                                          Event_window_(0),
+                                          N_Decays_per_s_(0.),
+                                          region_(""),
+                                          NDecays(1)//,
 // Detector_Geometry_("NAPA")
 {
-    msg_ = new G4GenericMessenger(this, "/QPIX/Generator/", "Control commands of the ion primary generator.");
+    msg_ = new G4GenericMessenger(this, "/Generator/DiffusionGenerator/", "Control commands of the ion primary generator.");
     msg_->DeclareProperty("AtomicNumber",atomic_number_,"Atomic Number of the isotope ");
     msg_->DeclareProperty("AtomicMass",atomic_mass_,"Atomic Mass of the isotope ");
     msg_->DeclareProperty("DecayRate",N_Decays_per_s_,"Decay Rate in Decays/s(Bq) ");
+    msg_->DeclareProperty("energy_level",energy_level_,"Energy Level ");
     msg_->DeclareProperty("EventWindow",Event_window_,"Event Windows for Decays ");
     msg_->DeclareProperty("Region",region_,"Source Region");
     msg_->DeclareProperty("decay_at_time_zero", decay_at_time_zero_,"Set to true to make unstable isotopes decay at t=0.");
 
-    // Obtaining the detector information
-    detconst = dynamic_cast<const DetectorConstructForDiffusion*>
+    // Load the detector geometry, which will be used for the generation of vertices
+    const DetectorConstruction* detconst = dynamic_cast<const DetectorConstruction*>
     (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
+    if (detconst) geo_  = detconst->GetGeometry();
+    else G4Exception("[DiffusionGenerator]", "DiffusionGenerator()", FatalException, "Unable to load geometry.");
 }
 
-GeneratorForDiffusion::~GeneratorForDiffusion()
+DiffusionGenerator::~DiffusionGenerator()
 {
     delete msg_;
 }
 
-/*void GeneratorForDiffusion::GeneratePrimaries(G4Event* event)
+/*void DiffusionGenerator::GeneratePrimaries(G4Event* event)
 {
     // get MC truth manager
     MCTruthManager * mc_truth_manager = MCTruthManager::Instance();
@@ -123,9 +131,9 @@ GeneratorForDiffusion::~GeneratorForDiffusion()
 
 
 }*/
-G4ParticleDefinition * GeneratorForDiffusion::IonDefinition() {
+G4ParticleDefinition * DiffusionGenerator::IonDefinition() {
     G4ParticleDefinition * pdef= G4IonTable::GetIonTable()->GetIon(atomic_number_,atomic_mass_,energy_level_);
-    if (!pdef) G4Exception("GeneratorForDiffusion","IonDefinition()",FatalException,"Could not find the ion");
+    if (!pdef) G4Exception("DiffusionGenerator","IonDefinition()",FatalException,"Could not find the ion");
     // Unstable ions decay by default at a random time t sampled from an exponential
     // decay distribution proportional to their mean lifetime. This, even for
     // not so long-lived nuclides, pushes the global time of the event to scales
@@ -138,7 +146,7 @@ G4ParticleDefinition * GeneratorForDiffusion::IonDefinition() {
 
     return pdef;
 }
-void GeneratorForDiffusion::GeneratePrimaryVertex(G4Event* event)
+void DiffusionGenerator::GeneratePrimaryVertex(G4Event* event)
 {
 
     //Converting nCi to Bq 1nCi to 37 Bq
@@ -171,7 +179,7 @@ void GeneratorForDiffusion::GeneratePrimaryVertex(G4Event* event)
     }
 
 }
-void GeneratorForDiffusion::EventsWithWindow(G4Event*event,G4double decay_time){
+void DiffusionGenerator::EventsWithWindow(G4Event*event, G4double decay_time){
     // Pointer declared as static so that it gets allocated only once
     // (i.e. the ion definition is only looked up in the first event).
     static G4ParticleDefinition* pdef = IonDefinition();
@@ -179,7 +187,7 @@ void GeneratorForDiffusion::EventsWithWindow(G4Event*event,G4double decay_time){
     G4PrimaryParticle* ion = new G4PrimaryParticle(pdef);
 
     // Generate an initial position for the ion using the geometry
-    G4ThreeVector position = detconst->GetPosition();
+    G4ThreeVector position = geo_->GenerateVertex(region_);
     G4cout<<"Source Position"<<G4endl;
     G4cout<<"("<<position[0]<<position[1]<<position[2]<<")"<<G4endl;
 

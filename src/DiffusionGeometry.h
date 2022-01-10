@@ -2,39 +2,35 @@
 // Created by ilker on 1/4/22.
 //
 
-#ifndef G4QPIX_DETECTORCONSTRUCTFORDIFFUSION_H
-#define G4QPIX_DETECTORCONSTRUCTFORDIFFUSION_H
+#ifndef G4QPIX_DIFFUSIONGEOMETRY_H
+#define G4QPIX_DIFFUSIONGEOMETRY_H
 
-#include "G4VUserDetectorConstruction.hh"
-#include "G4ThreeVector.hh"
+#include "BaseGeometry.h"
 
 
 class G4Material;
 class G4GenericMessenger;
 class G4MaterialPropertiesTable;
 
-class DetectorConstructForDiffusion: public G4VUserDetectorConstruction {
+class DiffusionGeometry: public BaseGeometry {
 public:
 
 
-    DetectorConstructForDiffusion();
+    DiffusionGeometry();
 
-    virtual ~DetectorConstructForDiffusion();
+     ~DiffusionGeometry();
 
-     G4ThreeVector  GetPosition() const{return vtx_;};
 
 private:
 
-    G4VPhysicalVolume *Construct();
-    void ConstructSDandField();
+    virtual void Construct();
+    virtual G4ThreeVector GenerateVertex(const G4String& region) const;
 
-    G4MaterialPropertiesTable *GetMyPhotOptSurf();
 
     G4GenericMessenger *msg_; // Messenger for configuration parameters
     G4String Name_;
     G4double Temperature_;
     G4double Pressure_;
-    G4double world_size_;
     //For Detector Dimensions
     G4double Det_rmin_;
     G4double Det_rmax_;
@@ -50,13 +46,14 @@ private:
     G4double SourceHolder_rmax_;
     G4double SourceHolder_z_;
 
-    G4double phi_min = 0.0;
-    G4double phi_max = 2 * M_PI;
      G4ThreeVector vtx_;
+     G4double world_size_;
+    G4double phi_min ;
+    G4double phi_max ;
 
-};
+ };
 
 
 
 
-#endif //G4QPIX_DETECTORCONSTRUCTFORDIFFUSION_H
+#endif //G4QPIX_DIFFUSIONGEOMETRY_H

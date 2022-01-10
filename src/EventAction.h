@@ -11,7 +11,7 @@
 
 #include <G4UserEventAction.hh>
 
-
+class G4GenericMessenger;
 class EventAction: public G4UserEventAction
 {
 public:
@@ -19,6 +19,9 @@ public:
   virtual ~EventAction();
   virtual void BeginOfEventAction(const G4Event*);
   virtual void EndOfEventAction(const G4Event*);
+
+private:
+    G4GenericMessenger * msg_;
 };
 
 #endif

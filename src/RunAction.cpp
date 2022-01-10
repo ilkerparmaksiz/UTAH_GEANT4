@@ -7,7 +7,7 @@
 // -----------------------------------------------------------------------------
 
 #include "RunAction.h"
-
+#include "FactoryBase.h"
 // Q-Pix includes
 #include "AnalysisManager.h"
 #include "MCTruthManager.h"
@@ -17,18 +17,19 @@
 #include "G4LogicalVolumeStore.hh"
 #include "G4Run.hh"
 
-
+REGISTER_CLASS(RunAction,G4UserRunAction)
 RunAction::RunAction(): G4UserRunAction()//, Detector_Geometry_("APA")
 {
-    messenger_ = new G4GenericMessenger(this, "/Inputs/");
-    messenger_->DeclareProperty("root_output", root_output_path_,
+    msg_ = new G4GenericMessenger(this, "/QPIX/Action/RunAction/");
+
+    msg_->DeclareProperty("root_output", root_output_path_,
                                 "path to output ROOT file");
 }
 
 
 RunAction::~RunAction()
 {
-    delete messenger_;
+    delete msg_;
 }
 
 

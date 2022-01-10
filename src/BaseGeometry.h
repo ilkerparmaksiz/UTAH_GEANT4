@@ -11,7 +11,7 @@
 
 #include <G4ThreeVector.hh>
 #include <CLHEP/Units/SystemOfUnits.h>
-
+#include "G4MaterialPropertiesTable.hh"
 class G4LogicalVolume;
 
 using namespace CLHEP;
@@ -28,6 +28,17 @@ virtual void Construct() = 0;
 
 /// Returns the logical volume representing the geometry
 G4LogicalVolume* GetLogicalVolume() const;
+
+
+/// Returns the logical volume of Active Area
+void SetActiveLogicalVolume(G4LogicalVolume* actlv) ;
+G4LogicalVolume* GetActiveLogicalVolume() const;
+
+
+/// Returns the Optical Stuffs
+
+//virtual  G4MaterialPropertiesTable * GetMyPhotOptSurf() ;
+
 
 /// Returns a point within a given region of the geometry
 virtual G4ThreeVector GenerateVertex(const G4String&) const;
@@ -58,6 +69,8 @@ BaseGeometry();
 /// Sets the logical volume representing the geometry
 void SetLogicalVolume(G4LogicalVolume*);
 
+
+
 /// Sets the span (maximum dimension) of the geometry
 void SetSpan(G4double);
 
@@ -72,6 +85,8 @@ const BaseGeometry& operator=(const BaseGeometry&);
 
 private:
 G4LogicalVolume* logicVol_; ///< Pointer to the logical volume
+G4LogicalVolume* ActivelogicVol_; ///< Pointer to the logical volume
+
 G4double span_; ///< Maximum dimension of the geometry
 G4bool drift_; ///< True if geometry contains a drift field (for hit coordinates)
 G4double el_z_; ///< Starting point of EL generation in z
@@ -80,12 +95,17 @@ G4double el_z_; ///< Starting point of EL generation in z
 
 // Inline definitions ///////////////////////////////////
 
-inline BaseGeometry::BaseGeometry(): logicVol_(0), span_(25.*m), drift_(false), el_z_(0.*mm) {}
+inline BaseGeometry::BaseGeometry(): ActivelogicVol_(0),logicVol_(0), span_(25.*m), drift_(false), el_z_(0.*mm) {}
 
 inline BaseGeometry::~BaseGeometry() {}
 
 inline G4LogicalVolume* BaseGeometry::GetLogicalVolume() const
 { return logicVol_; }
+inline G4LogicalVolume* BaseGeometry::GetActiveLogicalVolume() const
+{ return ActivelogicVol_; }
+
+inline void BaseGeometry::SetActiveLogicalVolume(G4LogicalVolume* actlv)
+{ ActivelogicVol_ = actlv; }
 
 inline void BaseGeometry::SetLogicalVolume(G4LogicalVolume* lv)
 { logicVol_ = lv; }

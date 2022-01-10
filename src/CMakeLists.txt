@@ -7,12 +7,14 @@
 ##   * Creation date: 14 Aug 2019
 ## ---------------------------------------------------------
 
-SET(SRC   AnalysisManager.cpp
+SET(SRC BaseGeometry.h
+        FactoryBase.h
+        AnalysisManager.cpp
         GeneratorParticle.cpp
         MCTruthManager.cpp
         MCParticle.cpp
-        DetectorConstructForDiffusion.cpp
-        GeneratorForDiffusion.cpp
+        DiffusionGeometry.cpp
+        DiffusionGenerator.cpp
         DetectorConstruction.cpp
         PrimaryGeneration.cpp
         RunAction.cpp
@@ -27,6 +29,10 @@ SET(SRC   AnalysisManager.cpp
         PmtHit.cpp
         PmtSD.cpp
         GenericPhotosensor.cpp
+        UTA_TPC_Geometry.cpp
+        UTA_TPC_ParticleGenerator.cpp
+        QPIX_App.cpp
+        BatchSession.cc
 
         )
 

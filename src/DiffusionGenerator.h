@@ -2,8 +2,8 @@
 // Created by ilker on 1/5/22.
 //
 
-#ifndef G4QPIX_GENERATORFORDIFFUSION_H
-#define G4QPIX_GENERATORFORDIFFUSION_H
+#ifndef G4QPIX_DIFFUSIONGENERATOR_H
+#define G4QPIX_DIFFUSIONGENERATOR_H
 
 // GEANT4 includes
 #include <G4VPrimaryGenerator.hh>
@@ -12,16 +12,15 @@
 #include "G4GeneralParticleSource.hh"
 #include "G4ParticleTable.hh"
 #include "G4String.hh"
-#include "DetectorConstructForDiffusion.h"
 
 
 class G4ParticleDefinition;
 class G4GenericMessenger;
-
-class GeneratorForDiffusion : public G4VPrimaryGenerator{
+class BaseGeometry;
+class DiffusionGenerator : public G4VPrimaryGenerator{
 public:
-    GeneratorForDiffusion();
-     ~GeneratorForDiffusion();
+    DiffusionGenerator();
+     ~DiffusionGenerator();
     //virtual void GeneratePrimaries(G4Event*);
     //virtual void GENIEGeneratePrimaries(G4Event*);
 
@@ -45,16 +44,10 @@ private:
     G4int N_Decays_per_s_;
     G4String region_;
     G4int NDecays;
-    G4String Particle_Type_;
-    G4String Detector_Geometry_;
+
     G4double decay_time_;
 
-
-    double detector_length_x_;
-    double detector_length_y_;
-    double detector_length_z_;
-    G4Box* detector_solid_vol_;
-    const DetectorConstructForDiffusion* detconst;
+    const BaseGeometry* geo_;
 };
 
-#endif //G4QPIX_GENERATORFORDIFFUSION_H
+#endif //G4QPIX_DIFFUSIONGENERATOR_H

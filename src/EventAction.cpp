@@ -7,6 +7,8 @@
 // -----------------------------------------------------------------------------
 
 #include "EventAction.h"
+#include "FactoryBase.h"
+#include <G4GenericMessenger.hh>
 
 // Q-Pix includes
 #include "AnalysisManager.h"
@@ -15,13 +17,18 @@
 // GEANT4 includes
 #include "G4Event.hh"
 
-
+REGISTER_CLASS(EventAction,G4UserEventAction)
 EventAction::EventAction(): G4UserEventAction()
-{}
+{
+    msg_ = new G4GenericMessenger(this, "/Actions/EventAction/");
+
+}
 
 
 EventAction::~EventAction()
-{}
+{
+    delete msg_;
+}
 
 
 void EventAction::BeginOfEventAction(const G4Event*)
