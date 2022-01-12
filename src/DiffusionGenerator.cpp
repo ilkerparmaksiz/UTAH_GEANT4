@@ -185,12 +185,11 @@ void DiffusionGenerator::EventsWithWindow(G4Event*event, G4double decay_time){
     static G4ParticleDefinition* pdef = IonDefinition();
     // Create the new primary particle (i.e. the ion)
     G4PrimaryParticle* ion = new G4PrimaryParticle(pdef);
-
     // Generate an initial position for the ion using the geometry
     G4ThreeVector position = geo_->GenerateVertex(region_);
-    G4cout<<"Source Position"<<G4endl;
-    G4cout<<"("<<position[0]<<position[1]<<position[2]<<")"<<G4endl;
 
+    //Saving Particle Info
+    SavetheTruth(ion,position);
     //G4ThreeVector position  (0,0,0);
     // Ion generated at the start-of-event time
     // Create a new vertex
@@ -200,4 +199,56 @@ void DiffusionGenerator::EventsWithWindow(G4Event*event, G4double decay_time){
     // Add ion to the vertex and this to the event
     vertex->SetPrimary(ion);
     event->AddPrimaryVertex(vertex);
+}
+
+
+
+void DiffusionGenerator::SavetheTruth(G4PrimaryParticle *const particle_gun_ , G4ThreeVector  const pos ){
+
+    // get MC truth manager
+    MCTruthManager * mc_truth_manager = MCTruthManager::Instance();
+
+    // get generated particle
+ const  G4ParticleDefinition *  particle_definition = particle_gun_->GetParticleDefinition();
+
+    int const pdg_code = particle_definition->GetPDGEncoding();
+    double const charge = particle_definition->GetPDGCharge();
+    double const mass = particle_definition->GetPDGMass() * CLHEP::MeV;
+
+
+    G4ThreeVector const & momentum = particle_gun_->GetMomentum();
+
+    double const x = pos.x() / CLHEP::cm;
+    double const y = pos.y() / CLHEP::cm;
+    double const z = pos.z() / CLHEP::cm;
+    double const t = particle_gun_->GetProperTime();  // ns
+
+
+
+    double const kinetic_energy = particle_gun_->GetKineticEnergy() * CLHEP::MeV;
+    double const energy = kinetic_energy + mass;
+
+
+    double const px = momentum[0] ;
+    double const py = momentum[1];
+    double const pz = momentum[2];
+
+    // create generator particle
+    GeneratorParticle * particle = new GeneratorParticle();
+    particle->SetPDGCode (pdg_code);
+    particle->SetMass    (mass    );
+    particle->SetCharge  (charge  );
+    particle->SetX       (x       );
+    particle->SetY       (y       );
+    particle->SetZ       (z       );
+    particle->SetT       (t       );
+    particle->SetPx      (px      );
+    particle->SetPy      (py      );
+    particle->SetPz      (pz      );
+    particle->SetEnergy  (energy  );
+
+    // add to MC truth manager
+    mc_truth_manager->AddInitialGeneratorParticle(particle);
+    mc_truth_manager->AddFinalGeneratorParticle(particle);
+
 }

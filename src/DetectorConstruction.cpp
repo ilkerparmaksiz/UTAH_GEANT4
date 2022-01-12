@@ -85,7 +85,6 @@ void DetectorConstruction::ConstructSDandField()
   G4SDManager::GetSDMpointer()->AddNewDetector(tracking_sd);
 
   //G4LogicalVolume* detector_logic_vol =G4LogicalVolumeStore::GetInstance()->GetVolume("detector.logical");
-  std::cout<<"Detector Sellection" <<std::endl;
   G4LogicalVolume* detector_logic_vol = geo_->GetActiveLogicalVolume();
 
   SetSensitiveDetector(detector_logic_vol, tracking_sd);

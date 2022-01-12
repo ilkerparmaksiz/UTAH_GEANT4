@@ -43,7 +43,6 @@ PrimaryGeneration::PrimaryGeneration()
 
 PrimaryGeneration::~PrimaryGeneration()
 {
-  delete msg_;
 
 }
 

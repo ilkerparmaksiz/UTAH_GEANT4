@@ -8,8 +8,6 @@
 /QPIX/Action/RunAction/root_output /home/ilker/Projects/Diffusion/output/Am241.root
 
 
-
-
 /random/setSeeds 0 31
 
 
