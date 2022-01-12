@@ -45,27 +45,25 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
     G4double size = geo_->GetSpan();
 
-    G4Box* world_solid = new G4Box("WORLD", size/2., size/2., size/2.);
+    G4Box* World_solid = new G4Box("World", size/2., size/2., size/2.);
 
     G4Material* vacuum =
             G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
 
-    G4LogicalVolume* world_logic =
-            new G4LogicalVolume(world_solid, vacuum, "WORLD", 0, 0, 0, true);
+    G4LogicalVolume* World_logic =
+            new G4LogicalVolume(World_solid, vacuum, "World", 0, 0, 0, true);
 
-    world_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    World_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    G4PVPlacement* World_physi =
+            new G4PVPlacement(0, G4ThreeVector(), World_logic, "World", 0, false, 0, true);
 
-    G4PVPlacement* world_physi =
-            new G4PVPlacement(0, G4ThreeVector(), world_logic, "WORLD", 0, false, 0);
-
-    // We place the user's geometry in the center of the world
-
+    // We place the user's geometry in the center of the World
     G4LogicalVolume* geometry_logic = geo_->GetLogicalVolume();
 
-    new G4PVPlacement(0, G4ThreeVector(0,0,0),
-                      geometry_logic, geometry_logic->GetName(), world_logic, false, 0);
 
-    return world_physi;
+    new G4PVPlacement(0,G4ThreeVector(0,0,0),geometry_logic, geometry_logic->GetName(), World_logic, false, 0,true);
+
+    return World_physi;
 
 }
 

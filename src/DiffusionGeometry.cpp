@@ -37,8 +37,9 @@ DiffusionGeometry::DiffusionGeometry(): BaseGeometry(),
                                         msg_(nullptr),
                                         world_size_(55*cm),
                                         Name_("GasAr"),
-                                        Temperature_(300*kelvin),
+                                        Temperature_(293.15*kelvin),
                                         Pressure_(10*bar),
+                                        offset_(0,0,0),
                                         Det_rmin_(0),
                                         Det_rmax_(4.6*cm),
                                         Det_z_(12.5*cm),
@@ -56,6 +57,7 @@ DiffusionGeometry::DiffusionGeometry(): BaseGeometry(),
     msg_->DeclarePropertyWithUnit("world_size","cm",world_size_ ,  "Size of the World");
     msg_->DeclareProperty("MaterialName",Name_ ,  "Name of the material");
     msg_->DeclarePropertyWithUnit("Pressure","bar",Pressure_ ,  "Gas Pressure");
+    msg_->DeclarePropertyWithUnit("offset","cm",offset_ ,  "Gas Pressure");
     msg_->DeclarePropertyWithUnit("Temperature","kelvin",Temperature_ ,  "Temperature");
     msg_->DeclarePropertyWithUnit("Det_rmin","cm",Det_rmin_ ,  "Starting radius for cylindrical detector");
     msg_->DeclarePropertyWithUnit("Det_rmax","cm",Det_rmax_ ,  "Final radius for cylindrical detector");
@@ -73,6 +75,8 @@ DiffusionGeometry::DiffusionGeometry(): BaseGeometry(),
 //Destruct
 DiffusionGeometry::~DiffusionGeometry()  {}
 
+
+
 //Detector Geometry
 void DiffusionGeometry::Construct() {
     ////////////////////////////////// WORLD //////////////////////////////////
@@ -83,17 +87,16 @@ void DiffusionGeometry::Construct() {
     G4Material *mat;
 
     // GasAr or Liquid
-    Name_=="GasAr" ? mat = MaterialsList::GasAr(Pressure_,Temperature_) : mat = MaterialsList::FindMaterial(Name_);
+    Name_=="GasAr" ? mat = MaterialsList::GasAr(Pressure_,Temperature_) : mat =MaterialsList::OLAr();
+    G4Material *DetecMat =MaterialsList::Steel();
 
     ////////////////////////////////// DETECTOR //////////////////////////////////
 
     G4Tubs* detector_solid_vol = new G4Tubs("detector.solid", Det_rmin_, Det_rmax_, Det_z_, phi_min, phi_max);
 
-    G4LogicalVolume* detector_logic_vol = new G4LogicalVolume(detector_solid_vol, mat, "detector.logical");
-    detector_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-
-    G4ThreeVector offset(0, 0, 0.);
-    //vtx_=offset;
+    G4LogicalVolume* detector_logic_vol = new G4LogicalVolume(detector_solid_vol, DetecMat, "detector.logical");
+    this->SetDetectorPosition(Hep3Vector(0,0,0));
+    this->SetLogicalVolume(detector_logic_vol);
 
 
                     ////////////// DETECTOR Active Area //////////////
@@ -101,38 +104,51 @@ void DiffusionGeometry::Construct() {
     G4Tubs* detectorActive_solid_vol = new G4Tubs("detectorActive.solid", DetAct_rmin_, DetAct_rmax_, DetAct_z_, phi_min, phi_max);
 
     G4LogicalVolume* detectorActive_logic_vol = new G4LogicalVolume(detectorActive_solid_vol, mat, "detectorActive.logical");
-    detectorActive_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    new G4PVPlacement(0, offset,detectorActive_logic_vol, "detectorActive.physical", detector_logic_vol, false, 0, true);
+    this->SetActiveLogicalVolume(detectorActive_logic_vol); // Setting active region to use as sensitive detector
+    new G4PVPlacement(0,G4ThreeVector(0,0,0),detectorActive_logic_vol, detectorActive_logic_vol->GetName(),detector_logic_vol, false, 0,true);
 
 
     //Aluminum source holder
     G4Material * SourceHolderMat=MaterialsList::Al();
     G4Tubs* SourceHolder_solid_vol = new G4Tubs("SourceHolder.solid", SourceHolder_rmin_, SourceHolder_rmax_, SourceHolder_z_, phi_min, phi_max);
     G4LogicalVolume* SourceHolder_logic_vol = new G4LogicalVolume(SourceHolder_solid_vol, SourceHolderMat, "SourceHolder.logical");
-    SourceHolder_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
-    new G4PVPlacement(0, vtx_,SourceHolder_logic_vol, "SourceHolder.physical", detector_logic_vol, false, 0, true);
-    this->SetActiveLogicalVolume(detectorActive_logic_vol); // Setting active region to use as sensitive detector
-    this->SetLogicalVolume(detector_logic_vol);
+    this->SetSourceHolderLogicalVolume(SourceHolder_logic_vol);
+
+    new G4PVPlacement(0,offset_+vtx_,SourceHolder_logic_vol, SourceHolder_logic_vol->GetName(),detectorActive_logic_vol, false, 0,true);
+
+    SetVisuals();
 
 }
 
 
 G4ThreeVector DiffusionGeometry::GenerateVertex(const G4String& region) const
 {
-
-    if(!(region=="SourceHolder.logical")){
+    G4ThreeVector SourcePosition;
+    SourcePosition=vtx_+offset_;
+    if(!(region=="detectorActive.logical")){
 
         G4Exception("[DiffusionGeometry]", "GenerateVertex()", FatalException,
                     "Unknown vertex generation region.");
     }
-    return vtx_;
+    SourcePosition[2]=SourcePosition[2]-SourceHolder_z_;
+    return SourcePosition;
 }
-/*void DiffusionGeometry::ConstructSDandField() {
-    TrackingSD* tracking_sd = new TrackingSD("/G4QPIX/TRACKING", "TrackingHitsCollection");
-    G4SDManager::GetSDMpointer()->AddNewDetector(tracking_sd);
+void  DiffusionGeometry::SetVisuals() {
 
-    //G4LogicalVolume* detector_logic_vol =G4LogicalVolumeStore::GetInstance()->GetVolume("detector.logical");
-    G4LogicalVolume* detectorActive_logic_vol =G4LogicalVolumeStore::GetInstance()->GetVolume("detectorActive.logical");
-    SetSensitiveDetector(detectorActive_logic_vol, tracking_sd);
-}*/
+    G4LogicalVolumeStore* lvStore = G4LogicalVolumeStore::GetInstance();
+    G4LogicalVolume* DetectorLogical = lvStore->GetVolume("detector.logical");
+    G4LogicalVolume* DetectorActive = lvStore->GetVolume("detectorActive.logical");
+    G4LogicalVolume* SourceHolderLogical = lvStore->GetVolume("SourceHolder.logical");
+
+    G4VisAttributes *DetActivVa=new G4VisAttributes(G4Colour(1,1,1));
+    G4VisAttributes *SourceHolderLogicalVa=new G4VisAttributes(G4Colour(0,1,0));
+
+    SourceHolderLogicalVa->SetForceSolid(true);
+    DetActivVa->SetForceWireframe(true);
+    DetectorActive->SetVisAttributes(DetActivVa);
+
+    SourceHolderLogical->SetVisAttributes(SourceHolderLogicalVa);
+    DetectorLogical->SetVisAttributes(DetActivVa);
+
+}
 

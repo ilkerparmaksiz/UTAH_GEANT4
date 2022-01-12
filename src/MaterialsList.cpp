@@ -484,7 +484,7 @@ G4Material* MaterialsList::GasAr(G4double Pressure, G4double Temperature) {
 
         G4Element* Ar = nist->FindOrBuildElement("Ar");
 
-        mat = new G4Material(name, 1.664*g/L, 1, kStateGas,Temperature,Pressure);
+        mat = new G4Material(name, 1.664*(g/L), 1, kStateGas,Temperature,Pressure);
         mat->AddElement(Ar, 40);
 
     }

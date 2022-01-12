@@ -11,6 +11,7 @@
 class G4Material;
 class G4GenericMessenger;
 class G4MaterialPropertiesTable;
+class G4PVPlacement;
 
 class DiffusionGeometry: public BaseGeometry {
 public:
@@ -19,12 +20,14 @@ public:
     DiffusionGeometry();
 
      ~DiffusionGeometry();
+     void SetVisuals();
 
 
 private:
 
     virtual void Construct();
     virtual G4ThreeVector GenerateVertex(const G4String& region) const;
+
 
 
     G4GenericMessenger *msg_; // Messenger for configuration parameters
@@ -46,10 +49,13 @@ private:
     G4double SourceHolder_rmax_;
     G4double SourceHolder_z_;
 
-     G4ThreeVector vtx_;
+     Hep3Vector vtx_;
      G4double world_size_;
     G4double phi_min ;
     G4double phi_max ;
+    Hep3Vector offset_;
+    Hep3Vector SourceHolderPosition_;
+
 
  };
 
