@@ -50,8 +50,8 @@
 /Generator/DiffusionGenerator/AtomicNumber 97
 /Generator/DiffusionGenerator/AtomicMass 241
 # 1 microcurie --> 37000 Decays/s(Bq)
-/Generator/DiffusionGenerator/DecayRate 1000
-#/Generator/DiffusionGenerator/EventWindow 0
+/Generator/DiffusionGenerator/DecayRate 10
+/Generator/DiffusionGenerator/EventWindow 1   # seconds
 #works only if event_window is zero
 #/Generator/DiffusionGenerator/NDecays 39
 

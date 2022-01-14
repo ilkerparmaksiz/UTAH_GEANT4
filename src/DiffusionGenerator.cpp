@@ -51,7 +51,7 @@ DiffusionGenerator::DiffusionGenerator(): G4VPrimaryGenerator(),
     msg_->DeclareProperty("AtomicMass",atomic_mass_,"Atomic Mass of the isotope ");
     msg_->DeclareProperty("DecayRate",N_Decays_per_s_,"Decay Rate in Decays/s(Bq) ");
     msg_->DeclareProperty("energy_level",energy_level_,"Energy Level ");
-    msg_->DeclareProperty("EventWindow",Event_window_,"Event Windows for Decays ");
+    msg_->DeclareProperty("EventWindow",Event_window_,"Event Windows  of the decay ");
     msg_->DeclareProperty("Region",region_,"Source Region");
     msg_->DeclareProperty("decay_at_time_zero", decay_at_time_zero_,"Set to true to make unstable isotopes decay at t=0.");
 
@@ -150,7 +150,7 @@ void DiffusionGenerator::GeneratePrimaryVertex(G4Event* event)
 {
 
     //Converting nCi to Bq 1nCi to 37 Bq
-    G4int DecayRateinBq=(N_Decays_per_s_)*37*1e-6;
+    G4int DecayRateinBq=(N_Decays_per_s_);
     G4int N_Decays=DecayRateinBq*Event_window_;
     //Printing Some Values
     /*G4cout<<"-----Printing Setting Values----" <<G4endl;
