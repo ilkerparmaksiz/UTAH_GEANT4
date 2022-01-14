@@ -38,7 +38,7 @@ void RTDCodeManager::Diffuser()
     if(AnaMngr->Get_hit_end_x().empty()) {
 
         G4Exception("[RTDCodeManager]", "Diffuser()", FatalException,
-                    "No Hits!");
+                    "There are no available hits!");
     }
 
     std::cout<<AnaMngr->Get_hit_start_t()[0]<<std::endl;

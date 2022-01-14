@@ -19,9 +19,11 @@
 #include "G4Event.hh"
 
 REGISTER_CLASS(EventAction,G4UserEventAction)
-EventAction::EventAction(): G4UserEventAction()
+EventAction::EventAction(): G4UserEventAction(),runRTDCode_(false)
 {
     msg_ = new G4GenericMessenger(this, "/Actions/EventAction/");
+    msg_->DeclareProperty("runRTDCode",runRTDCode_ ,  "This is running RTD code to simulate diffusion");
+
 
 }
 
@@ -40,6 +42,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
 {
     // get MC truth manager
     MCTruthManager * mc_truth_manager = MCTruthManager::Instance();
+
     RTDCodeManager * rtd=new RTDCodeManager();
 
     // get analysis manager
@@ -82,8 +85,10 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
     std::cout<<"Running Event: "<< event->GetEventID()<<std::endl;
     //RTD Code here
-    rtd->Diffuser();
-    rtd->MakeCurrent(1);
+    if(runRTDCode_){
+        rtd->Diffuser();
+        rtd->MakeCurrent(1);
+    }
 
     // write event to ROOT file and reset event variables
     analysis_manager->EventFill();

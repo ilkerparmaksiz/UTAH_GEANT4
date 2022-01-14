@@ -10,6 +10,7 @@
 #define EVENT_ACTION_H
 
 #include <G4UserEventAction.hh>
+#include "G4String.hh"
 
 class G4GenericMessenger;
 class [[maybe_unused]] RTDManager;
@@ -23,6 +24,7 @@ public:
 
 private:
     G4GenericMessenger * msg_;
+    bool runRTDCode_;
 };
 
 #endif
