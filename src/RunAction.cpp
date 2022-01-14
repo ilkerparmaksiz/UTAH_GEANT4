@@ -11,6 +11,7 @@
 // Q-Pix includes
 #include "AnalysisManager.h"
 #include "MCTruthManager.h"
+#include "RTDCodeManager.h"
 
 // GEANT4 includes
 #include "G4Box.hh"
@@ -36,7 +37,6 @@ RunAction::~RunAction()
 void RunAction::BeginOfRunAction(const G4Run* run)
 {
     G4cout << "RunAction::BeginOfRunAction: Run #" << run->GetRunID() << " start." << G4endl;
-
     // get run number
     AnalysisManager * analysis_manager = AnalysisManager::Instance();
     analysis_manager->Book(root_output_path_);
@@ -48,8 +48,10 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     // get MC truth manager
     MCTruthManager * mc_truth_manager = MCTruthManager::Instance();
 
+
     // reset event in MC truth manager
     mc_truth_manager->EventReset();
+
 }
 
 

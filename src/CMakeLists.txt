@@ -33,7 +33,7 @@ SET(SRC BaseGeometry.h
         UTA_TPC_ParticleGenerator.cpp
         QPIX_App.cpp
         BatchSession.cpp
-        QPIX_RTD.cpp
+        RTDCodeManager.cpp
 
         )
 
