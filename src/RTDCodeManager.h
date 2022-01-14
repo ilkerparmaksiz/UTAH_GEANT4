@@ -1,31 +1,30 @@
 //
-// Created by ilker on 1/11/22.
+// Created by ilker on 1/13/22.
 //
 
-#ifndef G4QPIX_QPIX_RTD_H
-#define G4QPIX_QPIX_RTD_H
-#include "G4UnitsTable.hh"
-#include "MCParticle.h"
+#ifndef G4QPIX_RTDCODEMANAGER_H
+#define G4QPIX_RTDCODEMANAGER_H
+#include "G4String.hh"
+#include <vector>
 
-
-// setup the default Qpix paramaters
-class QPIX_RTD {
-
+class RTDCodeManager {
 public:
-    QPIX_RTD();
-    ~QPIX_RTD();
-
+    RTDCodeManager();
+    ~RTDCodeManager();
+    void Diffuser();
+    void MakeCurrent(int SensorID);
     struct ELECTRON
     {
         int    Pix_ID;
         double   time;
     };
 
-    void Diffuser();
-    void MakeCurrent(int SensorID);
     static bool Electron_Pix_Sort(ELECTRON one, ELECTRON two){ return (one.Pix_ID < two.Pix_ID);};
+    //static RTDCodeManager * Instance();
 
 private:
+
+    //static RTDCodeManager * inst_;
     G4double Wvalue ;
     G4double E_vel ; // cm/s
     G4double DiffusionL   ;  //cm**2/s
@@ -40,11 +39,11 @@ private:
     G4double Buffer_time ; // in s
     G4double Dead_time ; // in s
     std::vector<ELECTRON> hit_e;
-    const G4double ElectronCharge_=1.60217662e-19;
-    std::vector<double> InstantaneousCharge;
-    std::vector<double> CumulativeCharge;
+    G4double ElectronCharge_;
+    std::vector<G4double> InstantaneousCharge;
+    //std::vector<double> CumulativeCharge;
 
 };
 
 
-#endif //G4QPIX_QPIX_RTD_H
+#endif //G4QPIX_RTDCODEMANAGER_H
