@@ -140,15 +140,19 @@ void  DiffusionGeometry::SetVisuals() {
     G4LogicalVolume* DetectorActive = lvStore->GetVolume("detectorActive.logical");
     G4LogicalVolume* SourceHolderLogical = lvStore->GetVolume("SourceHolder.logical");
 
-    G4VisAttributes *DetActivVa=new G4VisAttributes(G4Colour(1,1,1));
-    G4VisAttributes *SourceHolderLogicalVa=new G4VisAttributes(G4Colour(0,1,0));
+    G4VisAttributes *DetActivVa=new G4VisAttributes(G4Colour(0,1,0));
+    G4VisAttributes *DetLogicVa=new G4VisAttributes(G4Colour(0,0,1));
+
+    G4VisAttributes *SourceHolderLogicalVa=new G4VisAttributes(G4Colour(1,1,1));
 
     SourceHolderLogicalVa->SetForceSolid(true);
-    DetActivVa->SetForceWireframe(true);
+    DetActivVa->SetForceCloud(true);
+    DetLogicVa->SetForceWireframe(true);
     DetectorActive->SetVisAttributes(DetActivVa);
 
     SourceHolderLogical->SetVisAttributes(SourceHolderLogicalVa);
-    DetectorLogical->SetVisAttributes(DetActivVa);
+    //DetectorLogical->SetVisAttributes(DetActivVa);
+    DetectorLogical->SetVisAttributes(DetLogicVa);
 
 }
 

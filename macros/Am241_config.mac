@@ -56,3 +56,6 @@
 #/Generator/DiffusionGenerator/NDecays 39
 
 
+# Getting Current Info
+/Actions/EventAction/runRTDCode false
+
