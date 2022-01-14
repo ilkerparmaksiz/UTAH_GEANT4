@@ -119,6 +119,7 @@ void AnalysisManager::Book(std::string const file_path)
     event_tree_->Branch("phit_end_y",          &phit_end_y_);
     event_tree_->Branch("phit_end_z",          &phit_end_z_);
     event_tree_->Branch("phit_end_t",          &phit_end_t_);
+    event_tree_->Branch("Current",&Current);
 
 }
 
@@ -208,6 +209,7 @@ void AnalysisManager::EventReset()
     phit_end_y_.clear();
     phit_end_z_.clear();
     phit_end_t_.clear();
+    Current.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -276,6 +278,11 @@ void AnalysisManager::AddFinalGeneratorParticle(GeneratorParticle const * partic
     generator_final_particle_py_.push_back(particle->Py());
     generator_final_particle_pz_.push_back(particle->Pz());
     generator_final_particle_energy_.push_back(particle->Energy());
+}
+
+//-----------------------------------------------------------------------------
+void AnalysisManager::AddCurrenttoFile(std::vector<double> cr){
+    Current=cr;
 }
 
 //-----------------------------------------------------------------------------

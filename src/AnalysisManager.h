@@ -47,15 +47,28 @@ class AnalysisManager {
         void AddFinalGeneratorParticle(GeneratorParticle const *);
 
         void AddMCParticle(MCParticle const *);
-
+        void AddCurrenttoFile(std::vector<double>);
         int ProcessToKey(std::string const &);
 
         inline void AddProcess(std::string const & process) { process_names_.insert(process); }
         inline std::set< std::string > GetProcessNames() const { return process_names_; }
+        const std::vector<double> Get_hit_start_x  () {return hit_start_x_;}
+        const std::vector<double> Get_hit_start_y  () {return hit_start_y_;}
+        const std::vector<double> Get_hit_start_z  () {return hit_start_z_;}
+        const std::vector<double> Get_hit_start_t  () {return hit_start_t_;}
+
+        const std::vector<double> Get_hit_end_x  () {return hit_end_x_;}
+        const std::vector<double> Get_hit_end_y  () {return hit_end_y_;}
+        const std::vector<double> Get_hit_end_z  () {return hit_end_z_;}
+        const std::vector<double> Get_hit_end_t  () {return hit_end_t_;}
+        const std::vector<double> Get_Energy     () {return hit_energy_deposit_;}
 
         static AnalysisManager* Instance();
 
-    private:
+
+
+
+private:
 
         static AnalysisManager * instance_;
 
@@ -150,6 +163,7 @@ class AnalysisManager {
         std::vector< int >    generator_final_particle_pdg_code_;
         std::vector< double > generator_final_particle_mass_;
         std::vector< double > generator_final_particle_charge_;
+        std::vector< double > Current;
 
 };
 

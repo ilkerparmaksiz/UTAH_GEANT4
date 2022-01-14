@@ -13,6 +13,7 @@
 // Q-Pix includes
 #include "AnalysisManager.h"
 #include "MCTruthManager.h"
+#include "QPIX_RTD.h"
 
 // GEANT4 includes
 #include "G4Event.hh"
@@ -39,6 +40,9 @@ void EventAction::EndOfEventAction(const G4Event* event)
 {
     // get MC truth manager
     MCTruthManager * mc_truth_manager = MCTruthManager::Instance();
+
+    // QPIX_RTD
+    QPIX_RTD * rtd=0;
 
     // get analysis manager
     AnalysisManager * analysis_manager = AnalysisManager::Instance();
@@ -77,6 +81,11 @@ void EventAction::EndOfEventAction(const G4Event* event)
         // auto const& hmmm = p.first;
         // G4cout << "hmmm" <<"\t"<< hmmm <<  G4endl;
     }
+
+
+    //RTD Code here
+   // rtd->Diffuser();
+    //rtd->MakeCurrent(1);
 
     // write event to ROOT file and reset event variables
     analysis_manager->EventFill();

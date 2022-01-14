@@ -5,7 +5,7 @@
 
 
 # output path
-/QPIX/Action/RunAction/root_output /home/ilker/Projects/Diffusion/output/Am241.root
+/QPIX/Action/RunAction/root_output /media/ilker/writable/QPIX/Am241.root
 
 
 /random/setSeeds 0 31
@@ -26,7 +26,7 @@
 ### Detector Active Area
 /Geometry/DiffusionGeometry/DetAct_rmin 0 cm
 /Geometry/DiffusionGeometry/DetAct_rmax 4 cm
-/Geometry/DiffusionGeometry/DetAct_z 8 cm
+/Geometry/DiffusionGeometry/DetAct_z 4 cm
 
 ### Source Holder Dimensions
 /Geometry/DiffusionGeometry/SourceHolder_rmin 0 cm
@@ -34,8 +34,10 @@
 /Geometry/DiffusionGeometry/SourceHolder_z 0.2 cm
 
 #### Position of the Source
-/Geometry/DiffusionGeometry/vtx 0 0 0 cm
+/Geometry/DiffusionGeometry/vtx 0 0 1 cm
 
+### Offset for active region
+/Geometry/DiffusionGeometry/offset 0 0 4 cm
 
 
 

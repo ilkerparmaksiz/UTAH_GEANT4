@@ -12,6 +12,7 @@
 #include <G4UserEventAction.hh>
 
 class G4GenericMessenger;
+class QPIX_RTD;
 class EventAction: public G4UserEventAction
 {
 public:

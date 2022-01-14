@@ -105,7 +105,7 @@ void DiffusionGeometry::Construct() {
 
     G4LogicalVolume* detectorActive_logic_vol = new G4LogicalVolume(detectorActive_solid_vol, mat, "detectorActive.logical");
     this->SetActiveLogicalVolume(detectorActive_logic_vol); // Setting active region to use as sensitive detector
-    new G4PVPlacement(0,G4ThreeVector(0,0,0),detectorActive_logic_vol, detectorActive_logic_vol->GetName(),detector_logic_vol, false, 0,true);
+    new G4PVPlacement(0,offset_,detectorActive_logic_vol, detectorActive_logic_vol->GetName(),detector_logic_vol, false, 0,true);
 
 
     //Aluminum source holder
@@ -114,7 +114,7 @@ void DiffusionGeometry::Construct() {
     G4LogicalVolume* SourceHolder_logic_vol = new G4LogicalVolume(SourceHolder_solid_vol, SourceHolderMat, "SourceHolder.logical");
     this->SetSourceHolderLogicalVolume(SourceHolder_logic_vol);
 
-    new G4PVPlacement(0,offset_+vtx_,SourceHolder_logic_vol, SourceHolder_logic_vol->GetName(),detectorActive_logic_vol, false, 0,true);
+    new G4PVPlacement(0,vtx_,SourceHolder_logic_vol, SourceHolder_logic_vol->GetName(),detector_logic_vol, false, 0,true);
 
     SetVisuals();
 
@@ -124,7 +124,7 @@ void DiffusionGeometry::Construct() {
 G4ThreeVector DiffusionGeometry::GenerateVertex(const G4String& region) const
 {
     G4ThreeVector SourcePosition;
-    SourcePosition=vtx_+offset_;
+    SourcePosition=vtx_;
     if(!(region=="detectorActive.logical")){
 
         G4Exception("[DiffusionGeometry]", "GenerateVertex()", FatalException,

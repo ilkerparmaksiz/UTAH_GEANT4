@@ -32,7 +32,8 @@ SET(SRC BaseGeometry.h
         UTA_TPC_Geometry.cpp
         UTA_TPC_ParticleGenerator.cpp
         QPIX_App.cpp
-        BatchSession.cc
+        BatchSession.cpp
+        QPIX_RTD.cpp
 
         )
 
