@@ -18,7 +18,8 @@ RTDCodeManager::RTDCodeManager():msg_(0),
         Reset(6250),
         Sample_time(1e-9),
         Buffer_time(100e-6),
-        ElectronCharge_(1.60217662e-19)
+        ElectronCharge_(1.60217662e-19),
+        cumulativeCharge_(0)
 {
     msg_ = new G4GenericMessenger(this, "/Actions/RTDManager/");
     msg_->DeclareProperty("SampleTime",Sample_time ,  "Change sampling time");
@@ -38,6 +39,7 @@ void RTDCodeManager::Diffuser()
 {
 
     int indexer = 0;
+    hit_e.clear();
     // loop over all hits in the event
     AnalysisManager * AnaMngr=AnalysisManager::Instance();
     if(AnaMngr->Get_hit_end_x().empty()) {
@@ -162,8 +164,8 @@ void RTDCodeManager::MakeCurrent(int SensorID) {
     }
     if(TempHiteTime.empty()) {G4Exception("[RTDCodeManager]","MakeCurrent",JustWarning,"TempHiteTime vector is empty.."); return;}
     std::cout<<"There are "<<TempHiteTime.size()<<" many timeHits "<<std::endl;
-    //CumulativeCharge.clear();
-
+    CumulativeCharge.clear();
+    InstantaneousCharge.clear();
     int charge = 0;
     int Icharge= 0;
     int charge_dex = 0;
@@ -204,11 +206,12 @@ void RTDCodeManager::MakeCurrent(int SensorID) {
         }
 
         // write the instanuoous and cummlitive currents
+        cumulativeCharge_+=(charge*ElectronCharge_/10e-9)*1e9;
         InstantaneousCharge.push_back( (Icharge*ElectronCharge_/10e-9)*1e9 );
-        //CumulativeCharge.push_back( (charge*ElectronCharge_/10e-9)*1e9 );
-        AnaMngr->AddCurrenttoFile(InstantaneousCharge);
-        hit_e.clear();
-        InstantaneousCharge.clear();
+        CumulativeCharge.push_back( cumulativeCharge_ );
+        AnaMngr->AddInstCurrenttoFile(InstantaneousCharge);
+        AnaMngr->AddCumCurrenttoFile(CumulativeCharge);
+
     }
 
 

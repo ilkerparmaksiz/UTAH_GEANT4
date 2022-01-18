@@ -47,7 +47,8 @@ class AnalysisManager {
         void AddFinalGeneratorParticle(GeneratorParticle const *);
 
         void AddMCParticle(MCParticle const *);
-        void AddCurrenttoFile(std::vector<double>);
+        void AddInstCurrenttoFile(std::vector<double>);
+        void AddCumCurrenttoFile(std::vector<double>);
         int ProcessToKey(std::string const &);
 
         inline void AddProcess(std::string const & process) { process_names_.insert(process); }
@@ -163,7 +164,8 @@ private:
         std::vector< int >    generator_final_particle_pdg_code_;
         std::vector< double > generator_final_particle_mass_;
         std::vector< double > generator_final_particle_charge_;
-        std::vector< double > Current;
+        std::vector< double > InstCurrent;
+        std::vector< double > CumCurrent;
 
 };
 

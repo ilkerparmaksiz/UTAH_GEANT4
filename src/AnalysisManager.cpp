@@ -8,6 +8,8 @@
 
 #include "AnalysisManager.h"
 
+#include <utility>
+
 AnalysisManager * AnalysisManager::instance_ = 0;
 
 //-----------------------------------------------------------------------------
@@ -119,7 +121,8 @@ void AnalysisManager::Book(std::string const file_path)
     event_tree_->Branch("phit_end_y",          &phit_end_y_);
     event_tree_->Branch("phit_end_z",          &phit_end_z_);
     event_tree_->Branch("phit_end_t",          &phit_end_t_);
-    event_tree_->Branch("Current",&Current);
+    event_tree_->Branch("InstCurrent",&InstCurrent);
+    event_tree_->Branch("CumCurrent",&CumCurrent);
 
 }
 
@@ -209,7 +212,8 @@ void AnalysisManager::EventReset()
     phit_end_y_.clear();
     phit_end_z_.clear();
     phit_end_t_.clear();
-    Current.clear();
+    InstCurrent.clear();
+    CumCurrent.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -281,8 +285,13 @@ void AnalysisManager::AddFinalGeneratorParticle(GeneratorParticle const * partic
 }
 
 //-----------------------------------------------------------------------------
-void AnalysisManager::AddCurrenttoFile(std::vector<double> cr){
-    Current=cr;
+void AnalysisManager::AddInstCurrenttoFile(std::vector<double> cr){
+    InstCurrent=std::move(cr);
+}
+
+//-----------------------------------------------------------------------------
+void AnalysisManager::AddCumCurrenttoFile(std::vector<double> cumcur){
+    CumCurrent=std::move(cumcur);
 }
 
 //-----------------------------------------------------------------------------

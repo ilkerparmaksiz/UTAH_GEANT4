@@ -43,9 +43,10 @@ private:
     G4double Dead_time ; // in s
     std::vector<ELECTRON> hit_e;
     G4double ElectronCharge_;
-    std::vector<G4double> InstantaneousCharge;
-    //std::vector<double> CumulativeCharge;
 
+    std::vector<G4double> InstantaneousCharge;
+    std::vector<double> CumulativeCharge;
+    G4double cumulativeCharge_;
 };
 
 
