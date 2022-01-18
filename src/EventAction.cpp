@@ -43,7 +43,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
     // get MC truth manager
     MCTruthManager * mc_truth_manager = MCTruthManager::Instance();
 
-    RTDCodeManager * rtd=new RTDCodeManager();
+    RTDCodeManager * rtd=RTDCodeManager::Instance();
 
     // get analysis manager
     AnalysisManager * analysis_manager = AnalysisManager::Instance();
@@ -83,9 +83,10 @@ void EventAction::EndOfEventAction(const G4Event* event)
         // G4cout << "hmmm" <<"\t"<< hmmm <<  G4endl;
     }
 
-    std::cout<<"Running Event: "<< event->GetEventID()<<std::endl;
+
     //RTD Code here
     if(runRTDCode_){
+        std::cout<<"Running RTD Code for Event: "<< event->GetEventID()<<std::endl;
         rtd->Diffuser();
         rtd->MakeCurrent(1);
     }
@@ -96,6 +97,5 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
     // reset event in MC truth manager
     mc_truth_manager->EventReset();
-    delete rtd;
 }
 

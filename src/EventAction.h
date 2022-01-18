@@ -13,7 +13,6 @@
 #include "G4String.hh"
 
 class G4GenericMessenger;
-class [[maybe_unused]] RTDManager;
 class EventAction: public G4UserEventAction
 {
 public:

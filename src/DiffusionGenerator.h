@@ -28,7 +28,7 @@ public:
     // setting a primary vertex that contains the chosen ion
     void GeneratePrimaryVertex(G4Event*);
     void EventsWithWindow(G4Event *,G4double decay_time);
-    void SavetheTruth(G4PrimaryParticle *const particle_gun_ , G4ThreeVector const pos_ );
+    void SavetheTruth(G4PrimaryParticle *const particle_gun_ , G4ThreeVector const pos_);
 
 
         protected:

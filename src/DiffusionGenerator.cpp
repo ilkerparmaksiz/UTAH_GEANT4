@@ -203,7 +203,7 @@ void DiffusionGenerator::EventsWithWindow(G4Event*event, G4double decay_time){
 
 
 
-void DiffusionGenerator::SavetheTruth(G4PrimaryParticle *const particle_gun_ , G4ThreeVector  const pos ){
+void DiffusionGenerator::SavetheTruth(G4PrimaryParticle *const particle_gun_ , G4ThreeVector  const pos){
 
     // get MC truth manager
     MCTruthManager * mc_truth_manager = MCTruthManager::Instance();
@@ -221,7 +221,7 @@ void DiffusionGenerator::SavetheTruth(G4PrimaryParticle *const particle_gun_ , G
     double const x = pos.x() / CLHEP::cm;
     double const y = pos.y() / CLHEP::cm;
     double const z = pos.z() / CLHEP::cm;
-    double const t = particle_gun_->GetProperTime();  // ns
+    double const t = decay_time_;  // ns
 
 
 

@@ -12,7 +12,6 @@
 #include "SteppingAction.h"
 #include "FactoryBase.h"
 #include "BatchSession.h"
-
 #include <G4UImanager.hh>
 
 #include <G4RunManager.hh>
@@ -29,6 +28,8 @@
 #include <G4UserEventAction.hh>
 #include <G4UserTrackingAction.hh>
 #include <G4UserSteppingAction.hh>
+#include "RTDCodeManager.h"
+
 
 
 
@@ -132,7 +133,6 @@ QPIX_App::QPIX_App(G4String init_macro): G4RunManager(), gen_name_(""),
     else
         this->SetUserAction(new SteppingAction());
 
-
     /////////////////////////////////////////////////////////
 
     // Set by default a random seed (system time) for the random
@@ -149,6 +149,7 @@ QPIX_App::QPIX_App(G4String init_macro): G4RunManager(), gen_name_(""),
 QPIX_App::~QPIX_App()
 {
     delete msg_;
+    delete rtd;
 }
 
 
@@ -185,12 +186,14 @@ void QPIX_App::Initialize()
     // Execute all command macro files before initializing the app
     // so that all objects get configured
     // G4UImanager* UI = G4UImanager::GetUIpointer();
+    //
+    rtd=RTDCodeManager::Instance();
 
     for (unsigned int i=0; i<macros_.size(); i++) {
         ExecuteMacroFile(macros_[i].data());
     }
-
     G4RunManager::Initialize();
+
 
     for (unsigned int j=0; j<delayed_.size(); j++) {
         ExecuteMacroFile(delayed_[j].data());

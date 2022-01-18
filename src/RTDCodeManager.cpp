@@ -6,8 +6,10 @@
 #include "AnalysisManager.h"
 #include "Randomize.hh"
 #include "G4Exception.hh"
+#include <G4GenericMessenger.hh>
 
-RTDCodeManager::RTDCodeManager():
+RTDCodeManager *RTDCodeManager::instance= nullptr;
+RTDCodeManager::RTDCodeManager():msg_(0),
         Wvalue(23.6),
         E_vel ( 164800.0),
         DiffusionL (6.8223),
@@ -15,15 +17,19 @@ RTDCodeManager::RTDCodeManager():
         Life_Time(0.1),
         Reset(6250),
         Sample_time(1e-9),
-        Buffer_time(1),
+        Buffer_time(100e-6),
         ElectronCharge_(1.60217662e-19)
 {
+    msg_ = new G4GenericMessenger(this, "/Actions/RTDManager/");
+    msg_->DeclareProperty("SampleTime",Sample_time ,  "Change sampling time");
+    msg_->DeclareProperty("BufferTime",Buffer_time ,  "Change buffer time");
+
 }
-/*RTDCodeManager * RTDCodeManager::Instance()
+RTDCodeManager * RTDCodeManager::Instance()
 {
-    if (inst_ == 0) inst_ = new RTDCodeManager();
-    return inst_;
-}*/
+    if (instance == 0) instance = new RTDCodeManager();
+    return instance;
+}
 RTDCodeManager::~RTDCodeManager() {}
 
 
@@ -34,34 +40,31 @@ void RTDCodeManager::Diffuser()
     int indexer = 0;
     // loop over all hits in the event
     AnalysisManager * AnaMngr=AnalysisManager::Instance();
-
     if(AnaMngr->Get_hit_end_x().empty()) {
 
         G4Exception("[RTDCodeManager]", "Diffuser()", FatalException,
                     "There are no available hits!");
     }
-
-    std::cout<<AnaMngr->Get_hit_start_t()[0]<<std::endl;
+    std::cout<<"Diffusing Hits for this event ..." <<std::endl;
     for (G4int idx=0;idx<AnaMngr->Get_hit_end_x().size();idx++)
     {
         // from PreStepPoint
         G4double const start_x = AnaMngr->Get_hit_start_x()[idx];      // cm
         G4double const start_y = AnaMngr->Get_hit_start_y()[idx];      // cm
         G4double const start_z = AnaMngr->Get_hit_start_z()[idx];      // cm
-        G4double const start_t = AnaMngr->Get_hit_start_t()[idx]; // nsec
+        G4double const start_t = (AnaMngr->Get_hit_start_t()[idx]*1e-9); // nsec
 
         // from PostStepPoint
         G4double const end_x = AnaMngr->Get_hit_end_x()[idx];      // cm
         G4double const end_y = AnaMngr->Get_hit_end_y()[idx];      // cm
         G4double const end_z = AnaMngr->Get_hit_end_z()[idx];      // cm
-        G4double const end_t = AnaMngr->Get_hit_end_t()[idx]; // nsec
-
+        G4double const end_t = (AnaMngr->Get_hit_end_t()[idx]*1e-9); // nsec
         // follow the track for truth matching
-        /*if ((start_t < 0.0) || (start_t > Buffer_time)){
+        if ((start_t < 0.0) || (start_t > Buffer_time)){
 
-            //G4Exception("[RTDCodeManager]","Diffuser",JustWarning,"skipping this because of Buffer_Time");
+            G4Exception("[RTDCodeManager]","Diffuser",JustWarning,"skipping this because of Buffer_Time");
             continue;
-        }*/
+        }
 
         // energy deposit
 
@@ -152,14 +155,13 @@ void RTDCodeManager::Diffuser()
 void RTDCodeManager::MakeCurrent(int SensorID) {
     AnalysisManager * AnaMngr=AnalysisManager::Instance();
     std::vector<G4double> TempHiteTime;
-    std::cout<<"Getting the current information.."<<std::endl;
+    std::cout<<"Creating the current profile for sensor ID " << SensorID<<std::endl;
     for (auto &x:hit_e){
         if(SensorID==x.Pix_ID)
             TempHiteTime.push_back(x.time);
     }
     if(TempHiteTime.empty()) {G4Exception("[RTDCodeManager]","MakeCurrent",JustWarning,"TempHiteTime vector is empty.."); return;}
     std::cout<<"There are "<<TempHiteTime.size()<<" many timeHits "<<std::endl;
-    InstantaneousCharge.clear();
     //CumulativeCharge.clear();
 
     int charge = 0;
@@ -205,6 +207,8 @@ void RTDCodeManager::MakeCurrent(int SensorID) {
         InstantaneousCharge.push_back( (Icharge*ElectronCharge_/10e-9)*1e9 );
         //CumulativeCharge.push_back( (charge*ElectronCharge_/10e-9)*1e9 );
         AnaMngr->AddCurrenttoFile(InstantaneousCharge);
+        hit_e.clear();
+        InstantaneousCharge.clear();
     }
 
 

@@ -7,7 +7,7 @@
 #define G4QPIX_QPIX_APP_H
 #include <G4RunManager.hh>
 class G4GenericMessenger;
-
+class RTDCodeManager;
 class QPIX_App : public G4RunManager {
 
 
@@ -34,6 +34,7 @@ class QPIX_App : public G4RunManager {
         void SetRandomSeed(G4int);
 
     private:
+        RTDCodeManager * rtd;
         G4GenericMessenger* msg_;
         G4String gen_name_; ///< Name of the chosen primary generator
         G4String geo_name_;  ///< Name of the chosen geometry

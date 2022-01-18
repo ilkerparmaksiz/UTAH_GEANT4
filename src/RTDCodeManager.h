@@ -6,13 +6,16 @@
 #define G4QPIX_RTDCODEMANAGER_H
 #include "G4String.hh"
 #include <vector>
-
+class G4GenericMessenger;
+class AnalysisManager;
 class RTDCodeManager {
 public:
     RTDCodeManager();
     ~RTDCodeManager();
     void Diffuser();
+    //void Diffuser(AnalysisManager*  AnaMngr);
     void MakeCurrent(int SensorID);
+    //void MakeCurrent(int SensorID,AnalysisManager* AnaMngr);
     struct ELECTRON
     {
         int    Pix_ID;
@@ -20,11 +23,11 @@ public:
     };
 
     static bool Electron_Pix_Sort(ELECTRON one, ELECTRON two){ return (one.Pix_ID < two.Pix_ID);};
-    //static RTDCodeManager * Instance();
+     static RTDCodeManager * Instance();
 
 private:
-
-    //static RTDCodeManager * inst_;
+    static RTDCodeManager * instance;
+    G4GenericMessenger * msg_;
     G4double Wvalue ;
     G4double E_vel ; // cm/s
     G4double DiffusionL   ;  //cm**2/s
