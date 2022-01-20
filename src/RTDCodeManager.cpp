@@ -214,7 +214,7 @@ void RTDCodeManager::MakeCurrent(int SensorID) {
         // write the instanuoous and cummlitive currents
         //cumulativeCharge_+=(charge*ElectronCharge_/10e-9)*1e9;
         InstantaneousCharge.push_back( (Icharge*ElectronCharge_/Sample_time)*1e9 );
-        CumulativeCharge.push_back( charge );
+        CumulativeCharge.push_back( charge*ElectronCharge_*1e15);
 
 
     }
