@@ -152,7 +152,7 @@ void  DiffusionGeometry::SetVisuals() {
 
     SourceHolderLogical->SetVisAttributes(SourceHolderLogicalVa);
     //DetectorLogical->SetVisAttributes(DetActivVa);
-    DetectorLogical->SetVisAttributes(DetLogicVa);
+    DetectorLogical->SetVisAttributes(G4VisAttributes::Invisible);
 
 }
 

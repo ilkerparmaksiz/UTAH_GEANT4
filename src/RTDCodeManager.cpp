@@ -22,6 +22,12 @@ RTDCodeManager::RTDCodeManager():msg_(0),
         cumulativeCharge_(0)
 {
     msg_ = new G4GenericMessenger(this, "/Actions/RTDManager/");
+    msg_->DeclareProperty("Wvalue",Wvalue ,  "Change Wvalue");
+    msg_->DeclareProperty("E_vel",E_vel ,  "Change E_vel");
+    msg_->DeclareProperty("DiffusionL",DiffusionL ,  "Change DiffusionL");
+    msg_->DeclareProperty("DiffusionT",DiffusionT ,  "Change DiffusionT");
+    msg_->DeclareProperty("Life_Time",Life_Time ,  "Change Life_Time");
+    msg_->DeclareProperty("Reset",Reset ,  "Change Reset");
     msg_->DeclareProperty("SampleTime",Sample_time ,  "Change sampling time");
     msg_->DeclareProperty("BufferTime",Buffer_time ,  "Change buffer time");
 
@@ -206,13 +212,14 @@ void RTDCodeManager::MakeCurrent(int SensorID) {
         }
 
         // write the instanuoous and cummlitive currents
-        cumulativeCharge_+=(charge*ElectronCharge_/10e-9)*1e9;
-        InstantaneousCharge.push_back( (Icharge*ElectronCharge_/10e-9)*1e9 );
-        CumulativeCharge.push_back( cumulativeCharge_ );
-        AnaMngr->AddInstCurrenttoFile(InstantaneousCharge);
-        AnaMngr->AddCumCurrenttoFile(CumulativeCharge);
+        //cumulativeCharge_+=(charge*ElectronCharge_/10e-9)*1e9;
+        InstantaneousCharge.push_back( (Icharge*ElectronCharge_/Sample_time)*1e9 );
+        CumulativeCharge.push_back( charge );
+
 
     }
+    AnaMngr->AddInstCurrenttoFile(InstantaneousCharge);
+    AnaMngr->AddCumCurrenttoFile(CumulativeCharge);
 
 
 
