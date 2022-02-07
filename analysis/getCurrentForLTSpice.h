@@ -5,8 +5,8 @@
 // found on file: Am241_Gas_5cm.root
 //////////////////////////////////////////////////////////
 
-#ifndef test_h
-#define test_h
+#ifndef getCurrentForLTSpice_h
+#define getCurrentForLTSpice_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -16,7 +16,7 @@
 #include "vector"
 #include "vector"
 
-class test {
+class getCurrentForLTSpice {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
@@ -159,28 +159,30 @@ public :
    TBranch        *b_InstCurrent;   //!
    TBranch        *b_CumCurrent;   //!
 
-   test(TTree *tree=0);
-   virtual ~test();
+   getCurrentForLTSpice(TTree *tree=0);
+   virtual ~getCurrentForLTSpice();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
    virtual void     Loop();
+   virtual void     PlotSingleEntries(int event);
+   virtual void     PlotAllEntries();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
 };
 
 #endif
 
-#ifdef test_cxx
-test::test(TTree *tree) : fChain(0) 
+#ifdef getCurrentForLTSpice_cxx
+getCurrentForLTSpice::getCurrentForLTSpice(TTree *tree) : fChain(0)
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("Am241_Gas_7cm.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/media/argon/DATA/Ilker/Diffusion/output/Am241_Liq_5cm.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("Am241_Gas_7cm.root");
+         f = new TFile("/media/argon/DATA/Ilker/Diffusion/output/Am241_Liq_5cm.root");
       }
       f->GetObject("event_tree",tree);
 
@@ -188,19 +190,19 @@ test::test(TTree *tree) : fChain(0)
    Init(tree);
 }
 
-test::~test()
+getCurrentForLTSpice::~getCurrentForLTSpice()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
 
-Int_t test::GetEntry(Long64_t entry)
+Int_t getCurrentForLTSpice::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t test::LoadTree(Long64_t entry)
+Long64_t getCurrentForLTSpice::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -213,7 +215,7 @@ Long64_t test::LoadTree(Long64_t entry)
    return centry;
 }
 
-void test::Init(TTree *tree)
+void getCurrentForLTSpice::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -358,7 +360,7 @@ void test::Init(TTree *tree)
    Notify();
 }
 
-Bool_t test::Notify()
+Bool_t getCurrentForLTSpice::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -369,18 +371,18 @@ Bool_t test::Notify()
    return kTRUE;
 }
 
-void test::Show(Long64_t entry)
+void getCurrentForLTSpice::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t test::Cut(Long64_t entry)
+Int_t getCurrentForLTSpice::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
    return 1;
 }
-#endif // #ifdef test_cxx
+#endif // #ifdef getCurrentForLTSpice_cxx
