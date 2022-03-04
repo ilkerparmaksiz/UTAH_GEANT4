@@ -164,8 +164,8 @@ private:
         std::vector< int >    generator_final_particle_pdg_code_;
         std::vector< double > generator_final_particle_mass_;
         std::vector< double > generator_final_particle_charge_;
-        std::vector< double > InstCurrent;
-        std::vector< double > CumCurrent;
+        std::vector< std::vector<double> > InstCurrent;
+        std::vector< std::vector<double> > CumCurrent;
 
 };
 

@@ -88,7 +88,6 @@ void EventAction::EndOfEventAction(const G4Event* event)
     if(runRTDCode_){
         std::cout<<"Running RTD Code for Event: "<< event->GetEventID()<<std::endl;
         rtd->Diffuser();
-        rtd->MakeCurrent(1);
     }
 
     // write event to ROOT file and reset event variables

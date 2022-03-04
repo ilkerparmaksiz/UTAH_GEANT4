@@ -3,10 +3,10 @@
 //
 
 #include "RTDCodeManager.h"
+#include <G4ThreeVector.hh>
+#include <CLHEP/Units/SystemOfUnits.h>
 #include "AnalysisManager.h"
-#include "Randomize.hh"
-#include "G4Exception.hh"
-#include <G4GenericMessenger.hh>
+
 
 RTDCodeManager *RTDCodeManager::instance= nullptr;
 RTDCodeManager::RTDCodeManager():msg_(0),
@@ -19,7 +19,11 @@ RTDCodeManager::RTDCodeManager():msg_(0),
         Sample_time(1e-9),
         Buffer_time(100e-6),
         ElectronCharge_(1.60217662e-19),
-        cumulativeCharge_(0)
+        cumulativeCharge_(0),
+        SensorPos_(4, 4, 0),
+        NumofSensors_(12),
+        sensorspacing_(0.1),
+        sensorwidth_(0.1)
 {
     msg_ = new G4GenericMessenger(this, "/Actions/RTDManager/");
     msg_->DeclareProperty("Wvalue",Wvalue ,  "Change Wvalue");
@@ -30,6 +34,10 @@ RTDCodeManager::RTDCodeManager():msg_(0),
     msg_->DeclareProperty("Reset",Reset ,  "Change Reset");
     msg_->DeclareProperty("SampleTime",Sample_time ,  "Change sampling time");
     msg_->DeclareProperty("BufferTime",Buffer_time ,  "Change buffer time");
+    msg_->DeclareProperty("SensorPos",SensorPos_ ,  "Position of the Sensors");
+    msg_->DeclareProperty("NumOfSensors",NumofSensors_ ,  "How many sensors");
+    msg_->DeclareProperty("SensorSpacing",sensorspacing_ ,  "Spacing for the sensors");
+    msg_->DeclareProperty("SensorWidth",sensorwidth_,  "Sensor Trace Width");
 
 }
 RTDCodeManager * RTDCodeManager::Instance()
@@ -54,6 +62,9 @@ void RTDCodeManager::Diffuser()
                     "There are no available hits!");
     }
     std::cout<<"Diffusing Hits for this event ..." <<std::endl;
+    std::map<int,SENSORS*>fSensors;
+    fSensors=CreateTheSensors(NumofSensors_,sensorspacing_,sensorwidth_,SensorPos_);
+    std::cout<<"There are " << fSensors.size() << " many sensors"<<std::endl;
     for (G4int idx=0;idx<AnaMngr->Get_hit_end_x().size();idx++)
     {
         // from PreStepPoint
@@ -143,8 +154,12 @@ void RTDCodeManager::Diffuser()
              Pix_Xloc = (int) ceil(electron_x / Pix_Size);
              Pix_Yloc = (int) ceil(electron_y / Pix_Size);
              */
+            int SensorID=GetTheSensorID(electron_x,electron_y,fSensors);
 
-            hit_e[indexer].Pix_ID = 1; //When adding sensors use some pixel identification as above
+
+            hit_e[indexer].Pix_ID =SensorID;  //When adding sensors use some pixel identification as above
+
+            //hit_e[indexer].Pix_ID = 1; //When adding sensors use some pixel identification as above
             hit_e[indexer].time = electron_loc_t + ( electron_z / E_vel );
 
             // Move to the next electron
@@ -155,6 +170,8 @@ void RTDCodeManager::Diffuser()
             indexer += 1;
         }
     }
+    for(auto &sr:fSensors) MakeCurrent(sr.first);
+    PrintSensorInfo(fSensors);
     // sorts the electrons in terms of the pixel ID
    // std::sort(hit_e.begin(), hit_e.end(), Electron_Pix_Sort);
 
@@ -224,3 +241,44 @@ void RTDCodeManager::MakeCurrent(int SensorID) {
 
 
 }// Get_Hot_Current
+
+std::map<int,RTDCodeManager::SENSORS*> RTDCodeManager::CreateTheSensors(int NumOf,double spacing , double width,CLHEP::Hep3Vector Pos){
+    std::map<int,SENSORS*> SensorMap;
+    float Inc=0;
+    for (int i=0;i<NumOf;i++)
+    {
+        if (SensorMap.find(i)!=SensorMap.end())
+            continue;
+        SENSORS *sr=new SENSORS();
+        sr->Sensor_ID=i;
+        sr->Pos=Pos;
+        sr->innerRad=spacing+Inc;
+        sr->OutterRad=width+Inc+spacing;
+        Inc+=spacing+spacing;
+        SensorMap.insert(std::pair(i,sr));
+    }
+
+    return SensorMap;
+
+}
+
+int RTDCodeManager::GetTheSensorID(double electronX,double electronY,std::map<int,SENSORS*> sensors){
+    double distance;
+    distance= sqrt((electronX-SensorPos_[0])*(electronX-SensorPos_[0])+(electronY-SensorPos_[1])*(electronY-SensorPos_[1]));
+    std::cout<<distance<<std::endl;
+    for(auto &sr:sensors){
+        //std::cout<<distance<<std::endl;
+        if(distance >= sr.second->innerRad && distance<=sr.second->OutterRad)
+            return sr.first;
+    }
+    return -1;
+}
+void RTDCodeManager::PrintSensorInfo(std::map<int,SENSORS*> sr){
+    std::cout<<"Priting Sensor Information ..."<<std::endl;
+    for(auto &x:sr){
+        std::cout<<"ID -> "<<x.second->Sensor_ID<<std::endl;
+        std::cout<<"OutR -> "<<x.second->OutterRad<<std::endl;
+        std::cout<<"InR -> "<<x.second->innerRad<<std::endl;
+    }
+
+}

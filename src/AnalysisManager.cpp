@@ -286,12 +286,12 @@ void AnalysisManager::AddFinalGeneratorParticle(GeneratorParticle const * partic
 
 //-----------------------------------------------------------------------------
 void AnalysisManager::AddInstCurrenttoFile(std::vector<double> cr){
-    InstCurrent=std::move(cr);
+    InstCurrent.push_back(cr);
 }
 
 //-----------------------------------------------------------------------------
 void AnalysisManager::AddCumCurrenttoFile(std::vector<double> cumcur){
-    CumCurrent=std::move(cumcur);
+    CumCurrent.push_back(cumcur);
 }
 
 //-----------------------------------------------------------------------------

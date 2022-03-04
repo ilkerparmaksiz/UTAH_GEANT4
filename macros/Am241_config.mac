@@ -8,7 +8,7 @@
 
 
 # output path to root file
-/QPIX/Action/RunAction/root_output /media/argon/DATA/Ilker/Diffusion/output/Am241_Liq_5cm.root
+/QPIX/Action/RunAction/root_output output/test.root
 
 
 /random/setSeeds 0 31
