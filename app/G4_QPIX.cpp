@@ -5,22 +5,10 @@
 //   * Author: Justo Martin-Albo
 //   * Creation date: 14 Aug 2019
 // -----------------------------------------------------------------------------
-
-#include "DetectorConstruction.h"
-#include "PrimaryGeneration.h"
-#include "RunAction.h"
-#include "EventAction.h"
-#include "TrackingAction.h"
-#include "SteppingAction.h"
-
-#include <G4RunManager.hh>
+#include "QPIX_App.h"
+#include <G4UIExecutive.hh>
 #include <G4UImanager.hh>
 #include <G4VisExecutive.hh>
-#include <G4UIExecutive.hh>
-#include <FTFP_BERT_HP.hh>
-#include <G4EmStandardPhysics_option4.hh>
-#include <G4OpticalPhysics.hh>
-
 #include "Randomize.hh"
 #include "time.h"
 #include <getopt.h>
@@ -100,25 +88,9 @@ int main(int argc, char** argv)
 
 
 
-
+    QPIX_App *app= new QPIX_App(macfile);
   // Construct the run manager and set the initialization classes
-  G4RunManager* run_manager = new G4RunManager();
-
-  G4VModularPhysicsList* physics_list = new FTFP_BERT_HP(0);
-  physics_list->ReplacePhysics(new G4EmStandardPhysics_option4());
-  physics_list->RegisterPhysics(new G4OpticalPhysics());;
-
-
-  run_manager->SetUserInitialization(physics_list);
-
-  run_manager->SetUserInitialization(new DetectorConstruction());
-
-  run_manager->SetUserAction(new PrimaryGeneration());
-  run_manager->SetUserAction(new RunAction());
-  run_manager->SetUserAction(new EventAction());
-  run_manager->SetUserAction(new TrackingAction());
-  run_manager->SetUserAction(new SteppingAction());
-
+    app->Initialize();
 
 
   // Get the pointer to the User Interface manager
@@ -143,12 +115,11 @@ int main(int argc, char** argv)
   }
   else {
       // batch mode
-      run_manager->Initialize();
       G4String command = "/control/execute ";
       G4String fileName = macfile;
       uimgr->ApplyCommand(command+fileName);
 
-      run_manager->BeamOn(nevents);
+      app->BeamOn(nevents);
   }
 
   // Job termination
@@ -157,7 +128,7 @@ int main(int argc, char** argv)
   // in the main() program.
 
 
-  delete run_manager;
+  delete app;
   return EXIT_SUCCESS;
 
 }
