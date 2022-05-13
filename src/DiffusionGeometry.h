@@ -55,6 +55,7 @@ private:
     G4double phi_max ;
     Hep3Vector offset_;
     Hep3Vector SourceHolderPosition_;
+    bool HideSourceHolder_ ;
 
 
  };

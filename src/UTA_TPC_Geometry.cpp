@@ -39,9 +39,9 @@ UTA_TPC_Geometry::UTA_TPC_Geometry(): BaseGeometry(),
                                           vtx_(0,0,0)
 {
 
-    msg_ = new G4GenericMessenger(this, "/Input/UTA_TPC_Geometry/", "Control commands of the ion primary generator.");
+    msg_ = new G4GenericMessenger(this, "/Geometry/UTA_TPC_Geometry/", "Control commands of the ion primary generator.");
 
-    msg_->DeclarePropertyWithUnit("vtx",cm,vtx_,"Source Position");
+    msg_->DeclarePropertyWithUnit("vtx","cm",vtx_,"Source Position");
 }
 
 
@@ -77,7 +77,7 @@ void UTA_TPC_Geometry::Construct() {
 
     //G4Material* detector_mat = G4NistManager::Instance()->FindOrBuildMaterial("G4_lAr");
 
-    G4Material* detector_mat = MaterialsList::CopyMaterial( world_mat, 'OpticalLAr');
+    G4Material* detector_mat = MaterialsList::CopyMaterial( world_mat, "OpticalLAr");
     detector_mat->SetMaterialPropertiesTable(OpticalMaterialProperties::OpticalLAr());
 
     // G4MaterialPropertiesTable* mpt = detector_mat->GetMaterialPropertiesTable();
@@ -88,7 +88,7 @@ void UTA_TPC_Geometry::Construct() {
 
     G4LogicalVolume* detector_logic_vol =
             new G4LogicalVolume(detector_solid_vol, detector_mat, "detector.logical");
-    detector_logic_vol->SetVisAttributes(G4VisAttributes::Invisible);
+    detector_logic_vol->SetVisAttributes(G4VisAttributes::GetInvisible);
 
     // G4LogicalVolume* detector_logic_vol =
     //   new G4LogicalVolume(detector_solid_vol, world_mat, "detector.logical");

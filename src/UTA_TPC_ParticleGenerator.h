@@ -7,12 +7,12 @@
 // GEANT4 includes
 
 #include <G4VPrimaryGenerator.hh>
-
 #include "G4Box.hh"
 #include "G4Event.hh"
 #include "G4GeneralParticleSource.hh"
 #include "G4ParticleTable.hh"
 #include "G4String.hh"
+#include "BaseGeometry.h"
 
 
 class G4ParticleDefinition;
@@ -26,6 +26,8 @@ public:
     UTA_TPC_ParticleGenerator();
     ~UTA_TPC_ParticleGenerator();
     virtual void GeneratePrimaries(G4Event*);
+    void GeneratePrimaryVertex(G4Event*);
+
 protected:
 
     // GEANT4 dictionary of particles
@@ -39,6 +41,9 @@ private:
     bool decay_at_time_zero_;
 
     G4GeneralParticleSource * particle_gun_;
+    G4String region_;
+    G4double energy_;
+    G4ThreeVector momentumDirection_;
 };
 
 

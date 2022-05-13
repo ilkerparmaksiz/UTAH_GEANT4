@@ -10,6 +10,7 @@
 #include "MCTruthManager.h"
 #include "GeneratorParticle.h"
 
+
 // GEANT4 includes
 #include "G4PhysicalConstants.hh"
 #include "G4LogicalVolumeStore.hh"
@@ -29,17 +30,21 @@
 #include "G4GenericMessenger.hh"
 #include "Randomize.hh"
 
+#include "DetectorConstruction.h"
+#include "G4RunManager.hh"
+
+
+
 // C++ includes
 #include <stdlib.h>
 #include <math.h>
-
+REGISTER_CLASS(UTA_TPC_ParticleGenerator, G4VPrimaryGenerator)
 UTA_TPC_ParticleGenerator::UTA_TPC_ParticleGenerator()
         : G4VPrimaryGenerator(),
-          decay_at_time_zero_(false),
-          particle_gun_(0)//,
+          decay_at_time_zero_(false)
 // Detector_Geometry_("NAPA")
 {
-    msg_ = new G4GenericMessenger(this, "/Inputs/UTA_TPC_ParticleGenerator/", "Control commands of the ion primary generator.");
+    msg_ = new G4GenericMessenger(this, "/Generator/UTA_TPC_ParticleGenerator/", "Control commands of the ion primary generator.");
     msg_->DeclareProperty("Particle_Type", Particle_Type_,  "which particle?");
     msg_->DeclareProperty("decay_at_time_zero", decay_at_time_zero_,
                           "Set to true to make unstable isotopes decay at t=0.");
@@ -48,6 +53,7 @@ UTA_TPC_ParticleGenerator::UTA_TPC_ParticleGenerator()
 
     // get dictionary of particles
     particle_table_ = G4ParticleTable::GetParticleTable();
+
 
 }
 UTA_TPC_ParticleGenerator::~UTA_TPC_ParticleGenerator()
@@ -98,7 +104,8 @@ void UTA_TPC_ParticleGenerator::GeneratePrimaries(G4Event* event)
         } // if the particle is a nucleus
 
         G4ThreeVector const & position = particle_gun_->GetParticlePosition();
-        G4ThreeVector const & direction = particle_gun_->GetParticleMomentumDirection();
+
+        G4ThreeVector const & direction =particle_gun_->GetParticleMomentumDirection();
 
         double const x = position.x() / CLHEP::cm;
         double const y = position.y() / CLHEP::cm;
@@ -137,4 +144,8 @@ void UTA_TPC_ParticleGenerator::GeneratePrimaries(G4Event* event)
         mc_truth_manager->AddFinalGeneratorParticle(particle);
     }
 
+}
+
+void UTA_TPC_ParticleGenerator::GeneratePrimaryVertex(G4Event * event) {
+    GeneratePrimaries(event);
 }

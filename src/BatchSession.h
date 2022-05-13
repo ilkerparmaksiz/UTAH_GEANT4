@@ -15,7 +15,7 @@
 #include <fstream>
 
 
-
+typedef std::string::size_type str_size;
   class BatchSession: public G4UIsession
   {
   public:

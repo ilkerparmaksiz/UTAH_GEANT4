@@ -38,6 +38,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         G4Exception("[DetectorConstruction]", "Construct()",
                     FatalException, "Geometry not set!");
     }
+    G4LogicalVolume* World_logic;
+    geo_->SetWorldLogicalVolume(World_logic);
     geo_->Construct();
 
     // We define now the world volume as an empty box big enough
@@ -50,16 +52,15 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4Material* vacuum =
             G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
 
-    G4LogicalVolume* World_logic =
+     World_logic =
             new G4LogicalVolume(World_solid, vacuum, "World", 0, 0, 0, true);
 
-    World_logic->SetVisAttributes(G4VisAttributes::Invisible);
+    World_logic->SetVisAttributes(G4VisAttributes::GetInvisible);
     G4PVPlacement* World_physi =
             new G4PVPlacement(0, G4ThreeVector(), World_logic, "World", 0, false, 0, true);
 
     // We place the user's geometry in the center of the World
     G4LogicalVolume* geometry_logic = geo_->GetLogicalVolume();
-
 
     new G4PVPlacement(0,G4ThreeVector(0,0,0),geometry_logic, geometry_logic->GetName(), World_logic, false, 0,true);
 

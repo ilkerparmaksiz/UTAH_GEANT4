@@ -13,7 +13,6 @@
 #include <G4UImanager.hh>
 
 
-
 static void Tokenize(const G4String& str, std::vector<G4String>& tokens)
 {
   const char* delimiter= " ";
@@ -104,7 +103,7 @@ G4String BatchSession::ReadCommand()
       // string after '#" is ignored
       if(tokens[i][(size_t)0] == '#' ) break;
       // '\' or '_' is treated as continued line.
-      if(tokens[i] == '\\' || tokens[i] == '_' ) {
+      if(tokens[i] == "\\" || tokens[i] == "_" ) {
         qcontinued= true;
         // check nothing after line continuation character
         if( i != G4int(tokens.size())-1) {

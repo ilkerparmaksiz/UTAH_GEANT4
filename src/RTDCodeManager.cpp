@@ -34,10 +34,10 @@ RTDCodeManager::RTDCodeManager():msg_(0),
     msg_->DeclareProperty("Reset",Reset ,  "Change Reset");
     msg_->DeclareProperty("SampleTime",Sample_time ,  "Change sampling time");
     msg_->DeclareProperty("BufferTime",Buffer_time ,  "Change buffer time");
-    msg_->DeclareProperty("SensorPos",SensorPos_ ,  "Position of the Sensors");
+    msg_->DeclarePropertyWithUnit("SensorPos","cm",SensorPos_ ,  "Position of the Sensors");
     msg_->DeclareProperty("NumOfSensors",NumofSensors_ ,  "How many sensors");
-    msg_->DeclareProperty("SensorSpacing",sensorspacing_ ,  "Spacing for the sensors");
-    msg_->DeclareProperty("SensorWidth",sensorwidth_,  "Sensor Trace Width");
+    msg_->DeclarePropertyWithUnit("SensorSpacing","mm",sensorspacing_ ,  "Spacing for the sensors");
+    msg_->DeclarePropertyWithUnit("SensorWidth","mm",sensorwidth_,  "Sensor Trace Width");
 
 }
 RTDCodeManager * RTDCodeManager::Instance()
@@ -56,12 +56,17 @@ void RTDCodeManager::Diffuser()
     hit_e.clear();
     // loop over all hits in the event
     AnalysisManager * AnaMngr=AnalysisManager::Instance();
-    if(AnaMngr->Get_hit_end_x().empty()) {
 
+    if(AnaMngr->Get_hit_end_x().empty()) {
+        return;
         G4Exception("[RTDCodeManager]", "Diffuser()", FatalException,
                     "There are no available hits!");
     }
     std::cout<<"Diffusing Hits for this event ..." <<std::endl;
+    std::vector<double> elocx;
+    std::vector<double> elocy;
+    std::vector<double> elocz;
+    std::vector<double> eloct;
     std::map<int,SENSORS*>fSensors;
     fSensors=CreateTheSensors(NumofSensors_,sensorspacing_,sensorwidth_,SensorPos_);
     std::cout<<"There are " << fSensors.size() << " many sensors"<<std::endl;
@@ -146,6 +151,12 @@ void RTDCodeManager::Diffuser()
             electron_y = G4RandGauss::shoot(electron_loc_y,sigma_T);
             electron_z = G4RandGauss::shoot(electron_loc_z,sigma_L);
 
+            eloct.push_back(electron_loc_t);
+            elocx.push_back(electron_x);
+            elocy.push_back(electron_y);
+            elocz.push_back(electron_z);
+
+
             // add the electron to the vector.
             hit_e.push_back(ELECTRON());
 
@@ -163,15 +174,18 @@ void RTDCodeManager::Diffuser()
             hit_e[indexer].time = electron_loc_t + ( electron_z / E_vel );
 
             // Move to the next electron
+
             electron_loc_x += step_x;
             electron_loc_y += step_y;
             electron_loc_z += step_z;
             electron_loc_t += step_t;
             indexer += 1;
+
         }
     }
+    AnaMngr->AddElectronLocation(elocx,elocy,elocz,eloct);
     for(auto &sr:fSensors) MakeCurrent(sr.first);
-    PrintSensorInfo(fSensors);
+    //PrintSensorInfo(fSensors);
     // sorts the electrons in terms of the pixel ID
    // std::sort(hit_e.begin(), hit_e.end(), Electron_Pix_Sort);
 
@@ -185,6 +199,7 @@ void RTDCodeManager::MakeCurrent(int SensorID) {
         if(SensorID==x.Pix_ID)
             TempHiteTime.push_back(x.time);
     }
+    if(TempHiteTime.empty()) return;
     if(TempHiteTime.empty()) {G4Exception("[RTDCodeManager]","MakeCurrent",JustWarning,"TempHiteTime vector is empty.."); return;}
     std::cout<<"There are "<<TempHiteTime.size()<<" many timeHits "<<std::endl;
     CumulativeCharge.clear();
@@ -265,7 +280,7 @@ std::map<int,RTDCodeManager::SENSORS*> RTDCodeManager::CreateTheSensors(int NumO
 int RTDCodeManager::GetTheSensorID(double electronX,double electronY,std::map<int,SENSORS*> sensors){
     double distance;
     distance= sqrt((electronX-SensorPos_[0])*(electronX-SensorPos_[0])+(electronY-SensorPos_[1])*(electronY-SensorPos_[1]));
-    std::cout<<distance<<std::endl;
+    // std::cout<<distance<<std::endl;
     for(auto &sr:sensors){
         //std::cout<<distance<<std::endl;
         if(distance >= sr.second->innerRad && distance<=sr.second->OutterRad)
@@ -282,3 +297,4 @@ void RTDCodeManager::PrintSensorInfo(std::map<int,SENSORS*> sr){
     }
 
 }
+

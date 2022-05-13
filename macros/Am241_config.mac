@@ -35,6 +35,7 @@
 /Geometry/DiffusionGeometry/DetAct_z 4 cm
 
 ### Source Holder Dimensions
+/Geometry/DiffusionGeometry/HideSourceHolder false
 /Geometry/DiffusionGeometry/SourceHolder_rmin 0 cm
 /Geometry/DiffusionGeometry/SourceHolder_rmax 0.5 cm
 /Geometry/DiffusionGeometry/SourceHolder_z 0.2 cm

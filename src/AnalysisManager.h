@@ -50,6 +50,9 @@ class AnalysisManager {
         void AddInstCurrenttoFile(std::vector<double>);
         void AddCumCurrenttoFile(std::vector<double>);
         int ProcessToKey(std::string const &);
+        void AddElectronLocation(std::vector<double> x,std::vector<double> y,std::vector<double> z,std::vector<double>t);
+
+
 
         inline void AddProcess(std::string const & process) { process_names_.insert(process); }
         inline std::set< std::string > GetProcessNames() const { return process_names_; }
@@ -166,6 +169,10 @@ private:
         std::vector< double > generator_final_particle_charge_;
         std::vector< std::vector<double> > InstCurrent;
         std::vector< std::vector<double> > CumCurrent;
+        std::vector<std::vector<double>> ElocX;
+        std::vector<std::vector<double>> ElocY;
+        std::vector<std::vector<double>> ElocZ;
+        std::vector<std::vector<double>> ElocT;
 
 };
 

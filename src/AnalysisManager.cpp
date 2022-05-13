@@ -122,7 +122,10 @@ void AnalysisManager::Book(std::string const file_path)
     event_tree_->Branch("phit_end_z",          &phit_end_z_);
     event_tree_->Branch("phit_end_t",          &phit_end_t_);
     event_tree_->Branch("InstCurrent",&InstCurrent);
-    event_tree_->Branch("CumCurrent",&CumCurrent);
+    event_tree_->Branch("Elocx",&ElocX);
+    event_tree_->Branch("Elocy",&ElocY);
+    event_tree_->Branch("Elocz",&ElocZ);
+    event_tree_->Branch("Eloct",&ElocT);
 
 }
 
@@ -214,6 +217,10 @@ void AnalysisManager::EventReset()
     phit_end_t_.clear();
     InstCurrent.clear();
     CumCurrent.clear();
+    ElocT.clear();
+    ElocZ.clear();
+    ElocY.clear();
+    ElocX.clear();
 }
 
 //-----------------------------------------------------------------------------
@@ -292,6 +299,14 @@ void AnalysisManager::AddInstCurrenttoFile(std::vector<double> cr){
 //-----------------------------------------------------------------------------
 void AnalysisManager::AddCumCurrenttoFile(std::vector<double> cumcur){
     CumCurrent.push_back(cumcur);
+}
+
+//-----------------------------------------------------------------------------
+void AnalysisManager::AddElectronLocation(std::vector<double> x,std::vector<double> y,std::vector<double> z,std::vector<double>t){
+    ElocT.push_back(t);
+    ElocZ.push_back(z);
+    ElocY.push_back(y);
+    ElocX.push_back(x);
 }
 
 //-----------------------------------------------------------------------------
