@@ -4,16 +4,15 @@
 /tracking/verbose 0
 # output path
 #/QPIX/Action/RunAction/root_output /media/ilker/writable/Diffusion_Measurement/alpha_2cm_50Vcm_1bar_.root
-/QPIX/Action/RunAction/root_output /media/ilker/writable/Diffusion_Measurement/electron.root
+/QPIX/Action/RunAction/root_output /media/ilker/writable/Diffusion_Measurement/Alpha_at_1000bar.root
 
 #/Geometry/DiffusionGeometry/MaterialName LAr
-
 
 #GEOMETRY
 /Geometry/DiffusionGeometry/world_size 1 m
 /Geometry/DiffusionGeometry/MaterialName GasAr
 /Geometry/DiffusionGeometry/Pressure 1 bar
-/Geometry/DiffusionGeometry/Temperature 293.15 kelvin
+/Geometry/DiffusionGeometry/Temperature 300 kelvin
 
 
 
@@ -51,12 +50,12 @@
 # gamma, opticalphoton, ...
 
 ### Generator Related Settings
-/gps/particle e-
+/gps/particle alpha
 /gps/direction -1 0 0
 
 # energy distribution
-/gps/ene/mono 0.546 MeV ## Sr90
-#/gps/ene/mono 5.4 MeV ## Am-241
+#/gps/ene/mono 0.546 MeV ## Sr90
+/gps/ene/mono 5.4 MeV ## Am-241
 
 
 # spherical volume source

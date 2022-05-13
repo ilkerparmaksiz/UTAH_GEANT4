@@ -479,12 +479,25 @@ G4Material* MaterialsList::FakeDielectric(G4Material* model_mat, G4String name)
 G4Material* MaterialsList::GasAr(G4double Pressure, G4double Temperature) {
     G4String name="GasAr";
     G4Material *mat =G4Material::GetMaterial(name,false);
+
+    G4double density ;
+    if(!Pressure==0 or density==0){
+        // Slope Density/Pressure = 1.64 kg/(m3*bar)
+        // This Function Gets the Argon Gas Density depending on the pressure
+        //These values are for a temperature of 300 K
+        // taken from http://www.nist.gov/srd/upload/jpcrd363.pdf
+        // Graph is here
+        //https://docs.google.com/spreadsheets/d/1r8MWP-QejlpY_l7vx2zKrzHtUWDj0BVMSlWC_WRg_VY/edit?usp=sharing
+        density=1.64*Pressure*kg/(m3*bar);
+    }
+
+
     if (mat == 0) {
         G4NistManager* nist = G4NistManager::Instance();
 
         G4Element* Ar = nist->FindOrBuildElement("Ar");
         //1.664 g/L
-        mat = new G4Material(name, 1.78*(g/L), 1, kStateGas,Temperature,Pressure);
+        mat = new G4Material(name, density, 1, kStateGas,Temperature,Pressure);
         mat->AddElement(Ar, 40);
 
     }
@@ -684,3 +697,5 @@ G4Material * MaterialsList::FindMaterial(const G4String Name) {
     }
     return  mat;
 }
+
+

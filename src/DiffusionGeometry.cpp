@@ -37,8 +37,8 @@ DiffusionGeometry::DiffusionGeometry(): BaseGeometry(),
                                         msg_(nullptr),
                                         world_size_(55*cm),
                                         Name_("GasAr"),
-                                        Temperature_(293.15*kelvin),
-                                        Pressure_(10*bar),
+                                        Temperature_(300*kelvin),
+                                        Pressure_(1*bar),
                                         offset_(0,0,0),
                                         Det_rmin_(0),
                                         Det_rmax_(4.6*cm),
@@ -91,6 +91,7 @@ void DiffusionGeometry::Construct() {
     // GasAr or Liquid
     Name_=="GasAr" ? mat = MaterialsList::GasAr(Pressure_,Temperature_) : mat =MaterialsList::OLAr();
     //G4Material *DetecMat =MaterialsList::Steel();
+
 
     ////////////////////////////////// DETECTOR //////////////////////////////////
 
