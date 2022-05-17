@@ -4,7 +4,7 @@
 /tracking/verbose 0
 # output path
 #/QPIX/Action/RunAction/root_output /media/ilker/writable/Diffusion_Measurement/alpha_2cm_50Vcm_1bar_.root
-/QPIX/Action/RunAction/root_output /media/ilker/writable/Diffusion_Measurement/Alpha_at_1000bar.root
+/QPIX/Action/RunAction/root_output /media/ilker/writable/Diffusion_Measurement/Alpha_1bar_2cm.root
 
 #/Geometry/DiffusionGeometry/MaterialName LAr
 
@@ -66,18 +66,19 @@
 
 # Particle as Point Source
 #/gps/pos/type Point
-#/gps/pos/centre 4 4 10.5 cm
+#/gps/pos/centre 7 4 10 cm
+
 
 # Circular Source
 /gps/pos/type Plane
 /gps/pos/shape Circle
-/gps/pos/centre 7 4 10 cm
+/gps/pos/centre 7 4 2 cm
 /gps/pos/radius 0.04 cm
 
 
 
 # Run RTD_Code for Diffusion and Current Profiles
-/Actions/EventAction/runRTDCode false
+/Actions/EventAction/runRTDCode true
 
 ### Variables for Diffusion and Current in the Liquid
 #/Actions/RTDManager/Wvalue 23.6

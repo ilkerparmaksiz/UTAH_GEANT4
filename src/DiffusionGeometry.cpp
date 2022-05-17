@@ -133,7 +133,7 @@ void DiffusionGeometry::Construct() {
     */
 
     SetVisuals();
-    this->SetActiveLogicalVolume(detector_logic_vol);
+    this->SetActiveLogicalVolume(detectorActive_logic_vol);
 
 
 }
