@@ -31,6 +31,10 @@ public:
         std::vector<double> CumulativeCur;
         std::vector<double> InstantenousCur;
     };
+    struct Pixels{
+        G4long PixelID;
+        double PixelX,PixelY,Q;
+    };
     struct ELECTRON
     {
         int    Pix_ID;
@@ -68,8 +72,10 @@ private:
     G4double cumulativeCharge_;
     CLHEP::Hep3Vector SensorPos_;
     int NumofSensors_;
-    double sensorspacing_;
-    double sensorwidth_;
+    G4double sensorspacing_;
+    G4double sensorwidth_;
+    G4double PixelStepX;
+    G4double PixelStepY;
 };
 
 

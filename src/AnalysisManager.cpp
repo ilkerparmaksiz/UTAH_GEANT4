@@ -126,7 +126,11 @@ void AnalysisManager::Book(std::string const file_path)
     event_tree_->Branch("Elocy",&ElocY);
     event_tree_->Branch("Elocz",&ElocZ);
     event_tree_->Branch("Eloct",&ElocT);
-
+    event_tree_->Branch("number_pixels",&NumberOfPixels,"number_pixels/I");
+    event_tree_->Branch("PixelID",&PixelID);
+    event_tree_->Branch("PixelX",&PixelX);
+    event_tree_->Branch("PixelY",&PixelY);
+    event_tree_->Branch("PixelQ",&PixelQ);
 }
 
 //-----------------------------------------------------------------------------
@@ -221,6 +225,11 @@ void AnalysisManager::EventReset()
     ElocZ.clear();
     ElocY.clear();
     ElocX.clear();
+    PixelID.clear();
+    PixelX.clear();
+    PixelY.clear();
+    PixelQ.clear();
+    NumberOfPixels=-1;
 }
 
 //-----------------------------------------------------------------------------
@@ -307,6 +316,13 @@ void AnalysisManager::AddElectronLocation(std::vector<double> x,std::vector<doub
     ElocZ.push_back(z);
     ElocY.push_back(y);
     ElocX.push_back(x);
+}
+void AnalysisManager::SavePixels(std::vector<double> pixid,std::vector<double> pixx,std::vector<double>pixy ,std::vector<double> pixq,int pixn){
+  PixelID.push_back(pixid);
+  PixelX.push_back(pixx);
+  PixelY.push_back(pixy);
+  PixelQ.push_back(pixq);
+  NumberOfPixels=pixn;
 }
 
 //-----------------------------------------------------------------------------

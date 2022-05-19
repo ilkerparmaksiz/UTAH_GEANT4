@@ -51,6 +51,8 @@ class AnalysisManager {
         void AddCumCurrenttoFile(std::vector<double>);
         int ProcessToKey(std::string const &);
         void AddElectronLocation(std::vector<double> x,std::vector<double> y,std::vector<double> z,std::vector<double>t);
+        void SavePixels(std::vector<double> pixid,std::vector<double> pixx,std::vector<double>pixy ,std::vector<double> pixq,int pixn);
+
 
 
 
@@ -173,6 +175,11 @@ private:
         std::vector<std::vector<double>> ElocY;
         std::vector<std::vector<double>> ElocZ;
         std::vector<std::vector<double>> ElocT;
+        int NumberOfPixels;
+        std::vector<std::vector<double>> PixelID;
+        std::vector<std::vector<double>> PixelX;
+        std::vector<std::vector<double>> PixelY;
+        std::vector<std::vector<double>> PixelQ;
 
 };
 

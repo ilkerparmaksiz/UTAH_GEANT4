@@ -7,7 +7,7 @@
 #include <CLHEP/Units/SystemOfUnits.h>
 #include "AnalysisManager.h"
 
-
+using namespace CLHEP;
 RTDCodeManager *RTDCodeManager::instance= nullptr;
 RTDCodeManager::RTDCodeManager():msg_(0),
         Wvalue(23.6),
@@ -20,10 +20,12 @@ RTDCodeManager::RTDCodeManager():msg_(0),
         Buffer_time(100e-6),
         ElectronCharge_(1.60217662e-19),
         cumulativeCharge_(0),
-        SensorPos_(4, 4, 0),
+        SensorPos_(4*cm, 4*cm, 0*cm),
         NumofSensors_(12),
-        sensorspacing_(0.1),
-        sensorwidth_(0.1)
+        sensorspacing_(0.1*cm),
+        sensorwidth_(0.1*cm),
+        PixelStepX(1),
+        PixelStepY(0.5)
 {
     msg_ = new G4GenericMessenger(this, "/Actions/RTDManager/");
     msg_->DeclareProperty("Wvalue",Wvalue ,  "Change Wvalue");
@@ -36,13 +38,17 @@ RTDCodeManager::RTDCodeManager():msg_(0),
     msg_->DeclareProperty("BufferTime",Buffer_time ,  "Change buffer time");
     msg_->DeclarePropertyWithUnit("SensorPos","cm",SensorPos_ ,  "Position of the Sensors");
     msg_->DeclareProperty("NumOfSensors",NumofSensors_ ,  "How many sensors");
-    msg_->DeclarePropertyWithUnit("SensorSpacing","mm",sensorspacing_ ,  "Spacing for the sensors");
-    msg_->DeclarePropertyWithUnit("SensorWidth","mm",sensorwidth_,  "Sensor Trace Width");
+    msg_->DeclarePropertyWithUnit("SensorSpacing","cm",sensorspacing_ ,  "Spacing for the sensors");
+    msg_->DeclarePropertyWithUnit("SensorWidth","cm",sensorwidth_,  "Sensor Trace Width");
+    msg_->DeclareProperty("PixelStepX",PixelStepX,  "PixelStepX");
+    msg_->DeclareProperty("PixelStepY",PixelStepY,  "PixelStepY");
+
 
 }
 RTDCodeManager * RTDCodeManager::Instance()
 {
     if (instance == 0) instance = new RTDCodeManager();
+
     return instance;
 }
 RTDCodeManager::~RTDCodeManager() {}
@@ -70,6 +76,7 @@ void RTDCodeManager::Diffuser()
     std::map<int,SENSORS*>fSensors;
     fSensors=CreateTheSensors(NumofSensors_,sensorspacing_,sensorwidth_,SensorPos_);
     std::cout<<"There are " << fSensors.size() << " many sensors"<<std::endl;
+    std::map<G4long ,Pixels*> pixels;
     for (G4int idx=0;idx<AnaMngr->Get_hit_end_x().size();idx++)
     {
         // from PreStepPoint
@@ -173,17 +180,73 @@ void RTDCodeManager::Diffuser()
             //hit_e[indexer].Pix_ID = 1; //When adding sensors use some pixel identification as above
             hit_e[indexer].time = electron_loc_t + ( electron_z / E_vel );
 
+
+
+            G4double fPixelX,fPixelY;
+            G4long fPixelID;
+
+            // Create Pixels
+            fPixelX=floor(electron_x/PixelStepX);
+            fPixelY=floor(electron_y/PixelStepY);
+            //G4cout<<"Electron PosX= " <<electron_x <<" PixelStepX = "<< PixelStepX <<" PixelX= "<<fPixelX<<G4endl;
+            //G4cout<<"Electron PosY= " <<electron_y <<" PixelStepY = "<< PixelStepY <<" PixelY= "<< fPixelY<<G4endl;
+            fPixelID=(1e6*fPixelX)+(1e3*fPixelY);
+
+            if(pixels.count(fPixelID)) {
+
+                pixels[fPixelID]->Q+=1;
+
+                //Find the Index of the Current PDG
+                //std::vector<int>::iterator itr = std::find(voxels[VoxelID]->PDGCode.begin(), voxels[VoxelID]->PDGCode.end(), hit->Pdg_code);
+                //voxels[VoxelID]->QPDg[std::distance(voxels[VoxelID]->PDGCode.begin(), itr)]+=1;
+            }
+            else {
+                Pixels * v1=new Pixels();
+                v1->PixelID=fPixelID;
+                v1->Q=1;
+                v1->PixelX= fPixelX;
+                v1->PixelY=fPixelY;
+
+                pixels.insert(std::pair<G4long ,Pixels*>(fPixelID,v1));
+            }
+
+
             // Move to the next electron
 
             electron_loc_x += step_x;
             electron_loc_y += step_y;
             electron_loc_z += step_z;
             electron_loc_t += step_t;
-            indexer += 1;
 
+            indexer += 1;
         }
     }
     AnaMngr->AddElectronLocation(elocx,elocy,elocz,eloct);
+
+    // Saving the Pixels to File
+    std::vector<double> fPixelIDs;
+    std::vector<double> fPixelXs;
+    std::vector<double> fPixelYs;
+    std::vector<double> fPixelQs;
+    int numbofPixels=0;
+    for (auto &x:pixels){
+        if(x.second->Q>=1){
+            fPixelIDs.push_back(x.second->PixelID);
+            fPixelXs.push_back(x.second->PixelX);
+            fPixelYs.push_back(x.second->PixelY);
+            fPixelQs.push_back(x.second->Q);
+            numbofPixels++;
+        } else continue;
+    }
+
+    if(!fPixelXs.empty() && !fPixelYs.empty() && !fPixelIDs.empty() && !fPixelQs.empty() ){
+        G4cout<<"Pixel Size -> "<<fPixelXs.size()<<G4endl;
+        AnaMngr->SavePixels(fPixelIDs,fPixelXs,fPixelYs,fPixelQs,numbofPixels);
+
+    }else {
+        std::cout<<"some of the vectors are empty"<<G4endl;
+    }
+
     for(auto &sr:fSensors) MakeCurrent(sr.first);
     //PrintSensorInfo(fSensors);
     // sorts the electrons in terms of the pixel ID

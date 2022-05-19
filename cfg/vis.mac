@@ -92,11 +92,11 @@
 # Specify view angle:
 /vis/viewer/set/viewpointVector 0 0 -1
 #/vis/viewer/set/lightsVector 0 0 0
-/vis/viewer/zoomTo 8
+/vis/viewer/zoomTo 10
 #
 # Axes, scale, etc.
 /vis/scene/add/scale 6 cm x 1 1 1 manual 4 5 5.5 cm  # Simple scale line
-/vis/scene/add/axes    # Simple axes: x=red, y=green, z=blue.
+#/vis/scene/add/axes    # Simple axes: x=red, y=green, z=blue.
 /vis/scene/add/eventID # Drawn at end of event
 #/vis/scene/add/date    # Date stamp
 #/vis/scene/add/logo2D  # Simple logo
