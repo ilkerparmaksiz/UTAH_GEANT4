@@ -91,7 +91,7 @@ void UTA_TPC_ParticleGenerator::GeneratePrimaries(G4Event* event)
 
         int const pdg_code = particle_definition->GetPDGEncoding();
         double const charge = particle_definition->GetPDGCharge();
-        double const mass = particle_definition->GetPDGMass() * CLHEP::MeV;
+        double const mass = particle_definition->GetPDGMass() / CLHEP::MeV;
 
         // if the particle is a nucleus
         if (pdg_code > 1000000000)
@@ -116,7 +116,7 @@ void UTA_TPC_ParticleGenerator::GeneratePrimaries(G4Event* event)
         double const dy = direction.y();
         double const dz = direction.z();
 
-        double const kinetic_energy = particle_gun_->GetParticleEnergy() * CLHEP::MeV;
+        double const kinetic_energy = particle_gun_->GetParticleEnergy() / CLHEP::MeV;
         double const energy = kinetic_energy + mass;
 
         double const momentum = std::sqrt(energy*energy - mass*mass);

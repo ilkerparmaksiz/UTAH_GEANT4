@@ -312,16 +312,16 @@ void AnalysisManager::AddCumCurrenttoFile(std::vector<double> cumcur){
 
 //-----------------------------------------------------------------------------
 void AnalysisManager::AddElectronLocation(std::vector<double> x,std::vector<double> y,std::vector<double> z,std::vector<double>t){
-    ElocT.push_back(t);
-    ElocZ.push_back(z);
-    ElocY.push_back(y);
-    ElocX.push_back(x);
+    ElocT=t;
+    ElocZ=z;
+    ElocY=y;
+    ElocX=x;
 }
 void AnalysisManager::SavePixels(std::vector<double> pixid,std::vector<double> pixx,std::vector<double>pixy ,std::vector<double> pixq,int pixn){
-  PixelID.push_back(pixid);
-  PixelX.push_back(pixx);
-  PixelY.push_back(pixy);
-  PixelQ.push_back(pixq);
+  PixelID=pixid;
+  PixelX=pixx;
+  PixelY=pixy;
+  PixelQ=pixq;
   NumberOfPixels=pixn;
 }
 

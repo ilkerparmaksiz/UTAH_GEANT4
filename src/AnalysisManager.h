@@ -171,15 +171,15 @@ private:
         std::vector< double > generator_final_particle_charge_;
         std::vector< std::vector<double> > InstCurrent;
         std::vector< std::vector<double> > CumCurrent;
-        std::vector<std::vector<double>> ElocX;
-        std::vector<std::vector<double>> ElocY;
-        std::vector<std::vector<double>> ElocZ;
-        std::vector<std::vector<double>> ElocT;
+        std::vector<double> ElocX;
+        std::vector<double> ElocY;
+        std::vector<double> ElocZ;
+        std::vector<double> ElocT;
         int NumberOfPixels;
-        std::vector<std::vector<double>> PixelID;
-        std::vector<std::vector<double>> PixelX;
-        std::vector<std::vector<double>> PixelY;
-        std::vector<std::vector<double>> PixelQ;
+        std::vector<double> PixelID;
+        std::vector<double> PixelX;
+        std::vector<double> PixelY;
+        std::vector<double> PixelQ;
 
 };
 

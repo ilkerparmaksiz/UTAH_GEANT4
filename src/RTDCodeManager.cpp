@@ -258,13 +258,17 @@ void RTDCodeManager::MakeCurrent(int SensorID) {
     AnalysisManager * AnaMngr=AnalysisManager::Instance();
     std::vector<G4double> TempHiteTime;
     std::cout<<"Creating the current profile for sensor ID " << SensorID<<std::endl;
+
     for (auto &x:hit_e){
         if(SensorID==x.Pix_ID)
             TempHiteTime.push_back(x.time);
     }
+
     if(TempHiteTime.empty()) return;
     if(TempHiteTime.empty()) {G4Exception("[RTDCodeManager]","MakeCurrent",JustWarning,"TempHiteTime vector is empty.."); return;}
     std::cout<<"There are "<<TempHiteTime.size()<<" many timeHits "<<std::endl;
+
+
     CumulativeCharge.clear();
     InstantaneousCharge.clear();
     int charge = 0;
