@@ -41,7 +41,7 @@ class AnalysisManager {
         void SetRun(int const);
         void SetEvent(int const);
 
-        void FillMetadata(double const &, double const &, double const &);
+        void FillMetadata(double const & detector_length_x,double const & detector_length_y,double const & detector_length_z,double const & Efield,double const & DriftV,double const & DL,double const & DT,double const & DriftDistance,double const & Pressure,double const & PixelXStep,double const & PixelYStep);
 
         void AddInitialGeneratorParticle(GeneratorParticle const *);
         void AddFinalGeneratorParticle(GeneratorParticle const *);
@@ -51,7 +51,7 @@ class AnalysisManager {
         void AddCumCurrenttoFile(std::vector<double>);
         int ProcessToKey(std::string const &);
         void AddElectronLocation(std::vector<double> x,std::vector<double> y,std::vector<double> z,std::vector<double>t);
-        void SavePixels(std::vector<double> pixid,std::vector<double> pixx,std::vector<double>pixy ,std::vector<double> pixq,int pixn);
+        void SavePixels(std::vector<double> pixid,std::vector<double> pixx,std::vector<double>pixy ,std::vector<double> pixq,int pixn,std::vector<double> time);
 
 
 
@@ -89,6 +89,16 @@ private:
         double detector_length_x_;
         double detector_length_y_;
         double detector_length_z_;
+
+        double EField_;
+        double DiffusionT_;
+        double DiffusionL_;
+        double DriftVelocity_;
+        double DriftDistance_;
+        double Pressure_;
+        double PixelXStep_;
+        double PixelYStep_;
+
 
         // variables that will go into the event trees
         int run_;
@@ -180,6 +190,8 @@ private:
         std::vector<double> PixelX;
         std::vector<double> PixelY;
         std::vector<double> PixelQ;
+        std::vector<double> PixelTime;
+
 
 };
 

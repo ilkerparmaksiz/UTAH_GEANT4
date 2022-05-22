@@ -45,6 +45,15 @@ void AnalysisManager::Book(std::string const file_path)
     metadata_->Branch("detector_length_x", &detector_length_x_, "detector_length_x/D");
     metadata_->Branch("detector_length_y", &detector_length_y_, "detector_length_y/D");
     metadata_->Branch("detector_length_z", &detector_length_z_, "detector_length_z/D");
+    metadata_->Branch("Efield", &EField_, "Efield/D");
+    metadata_->Branch("DriftVelocity", &DriftVelocity_, "DriftVelocity/D");
+    metadata_->Branch("DriftDistance", &DriftDistance_, "DriftDistance/D");
+    metadata_->Branch("DiffusionT", &DiffusionT_, "DiffusionT/D");
+    metadata_->Branch("DiffusionL", &DiffusionL_, "DiffusionL/D");
+    metadata_->Branch("Pressure", &Pressure_, "Pressure/D");
+    metadata_->Branch("PixelXStep", &PixelXStep_, "PixelXStep/D");
+    metadata_->Branch("PixelYStep", &PixelYStep_, "PixelYStep/D");
+
 
     // event tree
     event_tree_ = new TTree("event_tree", "event tree");
@@ -131,6 +140,7 @@ void AnalysisManager::Book(std::string const file_path)
     event_tree_->Branch("PixelX",&PixelX);
     event_tree_->Branch("PixelY",&PixelY);
     event_tree_->Branch("PixelQ",&PixelQ);
+    event_tree_->Branch("Pixeltime",&PixelTime);
 }
 
 //-----------------------------------------------------------------------------
@@ -229,6 +239,7 @@ void AnalysisManager::EventReset()
     PixelX.clear();
     PixelY.clear();
     PixelQ.clear();
+    PixelTime.clear();
     NumberOfPixels=-1;
 }
 
@@ -258,11 +269,28 @@ void AnalysisManager::SetEvent(int const value)
 //-----------------------------------------------------------------------------
 void AnalysisManager::FillMetadata(double const & detector_length_x,
                                    double const & detector_length_y,
-                                   double const & detector_length_z)
+                                   double const & detector_length_z,
+                                   double const & Efield,
+                                   double const & DriftV,
+                                   double const & DL,
+                                   double const & DT,
+                                   double const & DriftDistance,
+                                   double const & Pressure,double const & stepx,double const & stepy)
 {
+    //Detector info
     detector_length_x_ = detector_length_x;
     detector_length_y_ = detector_length_y;
     detector_length_z_ = detector_length_z;
+
+    // RTD Code Related Constants
+    EField_=Efield;
+    DiffusionT_=DT;
+    DiffusionL_=DL;
+    DriftVelocity_=DriftV;
+    DriftDistance_=DriftDistance;
+    PixelXStep_=stepx;
+    PixelYStep_=stepy;
+    Pressure_=Pressure;
     metadata_->Fill();
 }
 
@@ -317,12 +345,13 @@ void AnalysisManager::AddElectronLocation(std::vector<double> x,std::vector<doub
     ElocY=y;
     ElocX=x;
 }
-void AnalysisManager::SavePixels(std::vector<double> pixid,std::vector<double> pixx,std::vector<double>pixy ,std::vector<double> pixq,int pixn){
+void AnalysisManager::SavePixels(std::vector<double> pixid,std::vector<double> pixx,std::vector<double>pixy ,std::vector<double> pixq,int pixn,std::vector<double> time){
   PixelID=pixid;
   PixelX=pixx;
   PixelY=pixy;
   PixelQ=pixq;
   NumberOfPixels=pixn;
+  PixelTime=time;
 }
 
 //-----------------------------------------------------------------------------

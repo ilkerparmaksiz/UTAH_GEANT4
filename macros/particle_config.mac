@@ -4,7 +4,7 @@
 /tracking/verbose 0
 # output path
 #/QPIX/Action/RunAction/root_output /media/ilker/writable/Diffusion_Measurement/alpha_2cm_50Vcm_1bar_.root
-/QPIX/Action/RunAction/root_output output/Alpha_1bar_2cm_25Vcm_Pixels_test.root
+/QPIX/Action/RunAction/root_output  /media/ilker/writable/Diffusion_Measurement/Alpha_1bar_2cm_25Vcm_Pixels_test.root
 
 #/Geometry/DiffusionGeometry/MaterialName LAr
 
@@ -50,12 +50,12 @@
 # gamma, opticalphoton, ...
 
 ### Generator Related Settings
-/gps/particle alpha
+/gps/particle e-
 /gps/direction -1 0 0
 
 # energy distribution
-#/gps/ene/mono 0.546 MeV ## Sr90
-/gps/ene/mono 5.4 MeV ## Am-241
+/gps/ene/mono 0.546 MeV ## Sr90
+#/gps/ene/mono 5.4 MeV ## Am-241
 
 
 # spherical volume source
@@ -96,18 +96,23 @@
 
 ### Variables for Diffusion and Current in the GAS 50 V/cm
 /Actions/RTDManager/Wvalue 26.4 # eV
-/Actions/RTDManager/E_vel 165900 # cm/s
-/Actions/RTDManager/DiffusionL 1320.908 #cm^2/s
-/Actions/RTDManager/DiffusionT 10119.576 #cm^2/s
+/Actions/RTDManager/Efield 50 # V/cm
+/Actions/RTDManager/Driftz 2 # cm
+/Actions/RTDManager/E_vel 200000 # cm/s
+/Actions/RTDManager/DiffusionL 1313.31 #cm^2/s
+/Actions/RTDManager/DiffusionT 8503.548 #cm^2/s
 /Actions/RTDManager/Life_Time 0.1
 /Actions/RTDManager/Reset 6250
 /Actions/RTDManager/SampleTime 10e-9
 /Actions/RTDManager/BufferTime 100e-6
 /Actions/RTDManager/SensorPos 2 2 7.5 cm
+## When <HideSensors True> Circular traces for detecting electrons will be off
+/Actions/RTDManager/HideSensors true
 /Actions/RTDManager/NumOfSensors 1
 /Actions/RTDManager/SensorSpacing 0.1 cm
 /Actions/RTDManager/SensorWidth 0.1 cm
-/Actions/RTDManager/PixelStepX 1 cm
+## Creating Pixels instead of circular sensors
+/Actions/RTDManager/PixelStepX 6 cm
 /Actions/RTDManager/PixelStepY 0.5 cm
 
 

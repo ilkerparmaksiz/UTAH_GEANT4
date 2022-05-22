@@ -49,7 +49,7 @@ echo "/run/initialize"                                >>${INPUT_MACRO}
 echo "/random/setSeeds 0 ${SEED}"                     >>${INPUT_MACRO}
 
 echo "/Supernova/Event_Cutoff 10 s"                   >>${INPUT_MACRO}
-echo "/run/beamOn 1000"                               >>${INPUT_MACRO}
+echo "/run/beamOn 1"                               >>${INPUT_MACRO}
 
 
 

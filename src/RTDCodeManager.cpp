@@ -25,7 +25,10 @@ RTDCodeManager::RTDCodeManager():msg_(0),
         sensorspacing_(0.1*cm),
         sensorwidth_(0.1*cm),
         PixelStepX(1),
-        PixelStepY(0.5)
+        PixelStepY(0.5),
+        Efield_(50),
+        DriftDistance_(2),
+        HideSensors_(true)
 {
     msg_ = new G4GenericMessenger(this, "/Actions/RTDManager/");
     msg_->DeclareProperty("Wvalue",Wvalue ,  "Change Wvalue");
@@ -36,12 +39,15 @@ RTDCodeManager::RTDCodeManager():msg_(0),
     msg_->DeclareProperty("Reset",Reset ,  "Change Reset");
     msg_->DeclareProperty("SampleTime",Sample_time ,  "Change sampling time");
     msg_->DeclareProperty("BufferTime",Buffer_time ,  "Change buffer time");
+    msg_->DeclareProperty("HideSensors",HideSensors_ ,  "Change buffer time");
     msg_->DeclarePropertyWithUnit("SensorPos","cm",SensorPos_ ,  "Position of the Sensors");
     msg_->DeclareProperty("NumOfSensors",NumofSensors_ ,  "How many sensors");
     msg_->DeclarePropertyWithUnit("SensorSpacing","cm",sensorspacing_ ,  "Spacing for the sensors");
     msg_->DeclarePropertyWithUnit("SensorWidth","cm",sensorwidth_,  "Sensor Trace Width");
     msg_->DeclareProperty("PixelStepX",PixelStepX,  "PixelStepX");
     msg_->DeclareProperty("PixelStepY",PixelStepY,  "PixelStepY");
+    msg_->DeclareProperty("Efield",Efield_,  "Efield");
+    msg_->DeclareProperty("Driftz",DriftDistance_,  "DriftDistance");
 
 
 }
@@ -64,18 +70,24 @@ void RTDCodeManager::Diffuser()
     AnalysisManager * AnaMngr=AnalysisManager::Instance();
 
     if(AnaMngr->Get_hit_end_x().empty()) {
-        return;
+
         G4Exception("[RTDCodeManager]", "Diffuser()", FatalException,
                     "There are no available hits!");
+        return;
     }
     std::cout<<"Diffusing Hits for this event ..." <<std::endl;
+
+    // This is for adding sensors detect electrons
+    std::map<int,SENSORS*>fSensors;
+    if(!HideSensors_){
+         fSensors=CreateTheSensors(NumofSensors_,sensorspacing_,sensorwidth_,SensorPos_);
+         std::cout<<"There are " << fSensors.size() << " many sensors"<<std::endl;
+    }
     std::vector<double> elocx;
     std::vector<double> elocy;
     std::vector<double> elocz;
     std::vector<double> eloct;
-    std::map<int,SENSORS*>fSensors;
-    fSensors=CreateTheSensors(NumofSensors_,sensorspacing_,sensorwidth_,SensorPos_);
-    std::cout<<"There are " << fSensors.size() << " many sensors"<<std::endl;
+
     std::map<G4long ,Pixels*> pixels;
     for (G4int idx=0;idx<AnaMngr->Get_hit_end_x().size();idx++)
     {
@@ -90,6 +102,7 @@ void RTDCodeManager::Diffuser()
         G4double const end_y = AnaMngr->Get_hit_end_y()[idx];      // cm
         G4double const end_z = AnaMngr->Get_hit_end_z()[idx];      // cm
         G4double const end_t = (AnaMngr->Get_hit_end_t()[idx]*1e-9); // nsec
+
         // follow the track for truth matching
         if ((start_t < 0.0) || (start_t > Buffer_time)){
 
@@ -158,47 +171,41 @@ void RTDCodeManager::Diffuser()
             electron_y = G4RandGauss::shoot(electron_loc_y,sigma_T);
             electron_z = G4RandGauss::shoot(electron_loc_z,sigma_L);
 
-            eloct.push_back(electron_loc_t);
-            elocx.push_back(electron_x);
-            elocy.push_back(electron_y);
-            elocz.push_back(electron_z);
+
 
 
             // add the electron to the vector.
             hit_e.push_back(ELECTRON());
+
 
             // convert the electrons x,y to a pixel index
             /* int Pix_Xloc, Pix_Yloc;
              Pix_Xloc = (int) ceil(electron_x / Pix_Size);
              Pix_Yloc = (int) ceil(electron_y / Pix_Size);
              */
-            int SensorID=GetTheSensorID(electron_x,electron_y,fSensors);
+            int SensorID=1;
+            if(!HideSensors_) SensorID = GetTheSensorID(electron_x, electron_y, fSensors);
 
 
-            hit_e[indexer].Pix_ID =SensorID;  //When adding sensors use some pixel identification as above
-
+            hit_e[indexer].Pix_ID = SensorID;
             //hit_e[indexer].Pix_ID = 1; //When adding sensors use some pixel identification as above
             hit_e[indexer].time = electron_loc_t + ( electron_z / E_vel );
-
 
 
             G4double fPixelX,fPixelY;
             G4long fPixelID;
 
+
             // Create Pixels
             fPixelX=floor(electron_x/PixelStepX);
             fPixelY=floor(electron_y/PixelStepY);
-            //G4cout<<"Electron PosX= " <<electron_x <<" PixelStepX = "<< PixelStepX <<" PixelX= "<<fPixelX<<G4endl;
-            //G4cout<<"Electron PosY= " <<electron_y <<" PixelStepY = "<< PixelStepY <<" PixelY= "<< fPixelY<<G4endl;
+
+
             fPixelID=(1e6*fPixelX)+(1e3*fPixelY);
 
             if(pixels.count(fPixelID)) {
-
                 pixels[fPixelID]->Q+=1;
-
-                //Find the Index of the Current PDG
-                //std::vector<int>::iterator itr = std::find(voxels[VoxelID]->PDGCode.begin(), voxels[VoxelID]->PDGCode.end(), hit->Pdg_code);
-                //voxels[VoxelID]->QPDg[std::distance(voxels[VoxelID]->PDGCode.begin(), itr)]+=1;
+                if(hit_e[indexer].time>pixels[fPixelID]->time) pixels[fPixelID]->time=hit_e[indexer].time;
             }
             else {
                 Pixels * v1=new Pixels();
@@ -206,12 +213,16 @@ void RTDCodeManager::Diffuser()
                 v1->Q=1;
                 v1->PixelX= fPixelX;
                 v1->PixelY=fPixelY;
-
+                v1->time=hit_e[indexer].time;
                 pixels.insert(std::pair<G4long ,Pixels*>(fPixelID,v1));
             }
 
-
             // Move to the next electron
+            eloct.push_back(hit_e[indexer].time);
+            elocx.push_back(electron_x);
+            elocy.push_back(electron_y);
+            elocz.push_back(electron_z);
+
 
             electron_loc_x += step_x;
             electron_loc_y += step_y;
@@ -228,6 +239,7 @@ void RTDCodeManager::Diffuser()
     std::vector<double> fPixelXs;
     std::vector<double> fPixelYs;
     std::vector<double> fPixelQs;
+    std::vector<double> fPixelTimes;
     int numbofPixels=0;
     for (auto &x:pixels){
         if(x.second->Q>=1){
@@ -235,19 +247,20 @@ void RTDCodeManager::Diffuser()
             fPixelXs.push_back(x.second->PixelX);
             fPixelYs.push_back(x.second->PixelY);
             fPixelQs.push_back(x.second->Q);
+            fPixelTimes.push_back(x.second->time);
             numbofPixels++;
         } else continue;
     }
 
     if(!fPixelXs.empty() && !fPixelYs.empty() && !fPixelIDs.empty() && !fPixelQs.empty() ){
         G4cout<<"Pixel Size -> "<<fPixelXs.size()<<G4endl;
-        AnaMngr->SavePixels(fPixelIDs,fPixelXs,fPixelYs,fPixelQs,numbofPixels);
+        AnaMngr->SavePixels(fPixelIDs,fPixelXs,fPixelYs,fPixelQs,numbofPixels,fPixelTimes);
 
     }else {
         std::cout<<"some of the vectors are empty"<<G4endl;
     }
 
-    for(auto &sr:fSensors) MakeCurrent(sr.first);
+    //for(auto &sr:fSensors) MakeCurrent(sr.first);
     //PrintSensorInfo(fSensors);
     // sorts the electrons in terms of the pixel ID
    // std::sort(hit_e.begin(), hit_e.end(), Electron_Pix_Sort);

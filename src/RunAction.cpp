@@ -60,15 +60,18 @@ void RunAction::EndOfRunAction(const G4Run*)
     // get analysis manager
     AnalysisManager * analysis_manager = AnalysisManager::Instance();
 
+    //RTDManager
+    RTDCodeManager * rtd=RTDCodeManager::Instance();
+
     // get detector dimensions
     G4LogicalVolume* detector_logic_vol
       = G4LogicalVolumeStore::GetInstance()->GetVolume("detector.logical");
+    G4LogicalVolume* detector_active_vol= G4LogicalVolumeStore::GetInstance()->GetVolume("detectorActive.logical");
 
     if (detector_logic_vol)
     {
-      analysis_manager->FillMetadata(777.,
-                                       777.,
-                                       777.);
+
+      analysis_manager->FillMetadata(1,1,1,rtd->getEfield(),rtd->getDriftVelocity(),rtd->getDL(),rtd->getDT(),rtd->getDriftDistance(),detector_active_vol->GetMaterial()->GetPressure()/CLHEP::bar,rtd->getPixelStepX(),rtd->getPixelStepY());
       // if (Detector_Geometry_ == "APA")
       // {G4Box * detector_solid_vol
       //   = dynamic_cast<G4Box*>(detector_logic_vol->GetSolid());

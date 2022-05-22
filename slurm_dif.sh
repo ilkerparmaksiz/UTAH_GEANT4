@@ -1,26 +1,24 @@
 #!/bin/bash                                                                                                                                                                                                                            
 
-#SBATCH -J QPIX_Marley      # A single job name for the array                                                                                                                                                                          
-#SBATCH -n 1                # Number of cores                                                                                                                                                                                          
-#SBATCH -N 1                # All cores on one machine                                                                                                                                                                                 
-#SBATCH -p guenette         # Partition                                                                                                                                                                                                
-#SBATCH --mem 1000          # Memory request (Mb)                                                                                                                                                                                      
-#SBATCH -t 0-8:00           # Maximum execution time (D-HH:MM)
+#SBATCH -J Qpix_Diffusion      # A single job name for the array
+#SBATCH -p run         # Partition
+#SBATCH --ntasks=1
+#SBATCH --nodes=1
+#SBATCH --mem 5000         # Memory request (Mb)
+#SBATCH -t 0-1:08           # Maximum execution time (D-HH:MM)
 #SBATCH -o %A_%a.out        # Standard output                                                                                                                                                                                          
-#SBATCH -e %A_%a.err        # Standard error                                                                                                                                                                                           
-
+#SBATCH -e %A_%a.err        # Standard error
 
 ## Job options                                                                                                                                                                                                                         
 JOBNUMBER=${SLURM_ARRAY_TASK_ID}
-GEANT4Path=
 SEED=`echo "scale = 2;  $JOBNUMBER" | bc`
 
 ## Path to output files and G4Executable
-outputDir="/home/ilker/Projects/QPIX/Diffusion"
+outputDir="/media/ilker/writable/Diffusion"
 PathToG4Executable="/home/ilker/Projects/QPIX/Diffusion/Build/app/G4_QPIX "
 
 ## Events
-NumberOfEvents=2
+NumberOfEvents=100
 # particle type
 # e-, e+, mu-, mu+, neutron, proton, anti_proton, pi-, pi+, pi0, kaon-, kaon+,
 # gamma, opticalphoton, ...
@@ -30,18 +28,18 @@ ParticleEnergy=5.4
 
 ## Pressure in bar,and Driftz in cm
 Pressure=1
-Driftz=2
+Driftz=1
 
 ### RTDCode
 RTDCodeOn="true"
-PixelStepX=1
+PixelStepX=6
 PixelStepY=0.5
 
 ## EField V/cm ,DL in cm^2/s, DT in cm^2/s,and Drift Vel in cm/s
-EField=100
-DL=868.908
-DT=6248.992
-DriftVel=240400
+EField=50
+DL=1313.31
+DT=8503.548
+DriftVel=200000
 
 
 ## Naming Macro and Root Files
@@ -77,7 +75,9 @@ echo "/QPIX/RegisterRunAction RunAction"  >>${init_MACRO}
 echo "/QPIX/RegisterSteppingAction SteppingAction"  >>${init_MACRO}
 echo "/QPIX/RegisterMacro ${config_MACRO}"  >>${init_MACRO}
 
-rm config_MACRO
+
+## Remove the Config File if it exists
+rm $config_MACRO
 echo $config_MACRO
 
 ## Configurations
@@ -146,6 +146,8 @@ echo "/Actions/EventAction/runRTDCode ${RTDCodeOn}"  >>${config_MACRO}
 ### Variables for Diffusion and Current in the GAS 50 V/cm
 echo "/Actions/RTDManager/Wvalue 26.4 # eV"  >>${config_MACRO}
 echo "/Actions/RTDManager/E_vel ${DriftVel} # cm/s"  >>${config_MACRO}
+echo "/Actions/RTDManager/Efield ${EField} # V/cm"  >>${config_MACRO}
+echo "/Actions/RTDManager/Driftz ${Driftz} # cm"  >>${config_MACRO}
 echo "/Actions/RTDManager/DiffusionL ${DL} #cm^2/s"  >>${config_MACRO}
 echo "/Actions/RTDManager/DiffusionT ${DT} #cm^2/s"  >>${config_MACRO}
 echo "/Actions/RTDManager/Life_Time 0.1"  >>${config_MACRO}
@@ -153,6 +155,7 @@ echo "/Actions/RTDManager/Reset 6250"  >>${config_MACRO}
 echo "/Actions/RTDManager/SampleTime 10e-9"  >>${config_MACRO}
 echo "/Actions/RTDManager/BufferTime 100e-6"  >>${config_MACRO}
 echo "/Actions/RTDManager/SensorPos 2 2 7.5 cm"  >>${config_MACRO}
+echo "/Actions/RTDManager/HideSensors true" >>${config_MACRO}
 echo "/Actions/RTDManager/NumOfSensors 1"  >>${config_MACRO}
 echo "/Actions/RTDManager/SensorSpacing 0.1 cm"  >>${config_MACRO}
 echo "/Actions/RTDManager/SensorWidth 0.1 cm"  >>${config_MACRO}

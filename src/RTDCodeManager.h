@@ -33,7 +33,7 @@ public:
     };
     struct Pixels{
         G4long PixelID;
-        double PixelX,PixelY,Q;
+        double PixelX,PixelY,Q,time;
     };
     struct ELECTRON
     {
@@ -48,6 +48,16 @@ public:
     static bool Electron_Pix_Sort(ELECTRON one, ELECTRON two){ return (one.Pix_ID < two.Pix_ID);};
      static RTDCodeManager * Instance();
 
+     const G4double getDriftVelocity(){return E_vel;}
+     const G4double getDL(){return DiffusionL;}
+     const G4double getDT(){return DiffusionT;}
+     const G4double getPixelStepX(){return PixelStepX;}
+     const G4double getPixelStepY(){return PixelStepY;}
+     const G4double getEfield(){return Efield_;}
+    const G4double getDriftDistance(){return DriftDistance_;}
+
+
+
 private:
     static RTDCodeManager * instance;
     G4GenericMessenger * msg_;
@@ -56,6 +66,9 @@ private:
     G4double DiffusionL   ;  //cm**2/s
     G4double DiffusionT  ; //cm**2/s
     G4double Life_Time ; // in s
+    G4double Efield_;
+    G4double DriftDistance_;
+    bool HideSensors_;
 
     // Number of electrons for reset
     G4int Reset ;
