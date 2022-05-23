@@ -50,12 +50,12 @@
 # gamma, opticalphoton, ...
 
 ### Generator Related Settings
-/gps/particle e-
+/gps/particle alpha
 /gps/direction -1 0 0
 
 # energy distribution
-/gps/ene/mono 0.546 MeV ## Sr90
-#/gps/ene/mono 5.4 MeV ## Am-241
+#/gps/ene/mono 0.546 MeV ## Sr90
+/gps/ene/mono 5.4 MeV ## Am-241
 
 
 # spherical volume source
@@ -72,7 +72,7 @@
 # Circular Source
 /gps/pos/type Plane
 /gps/pos/shape Circle
-/gps/pos/centre 7 4 2 cm
+/gps/pos/centre 7 4 1 cm  ## Change the z position
 /gps/pos/radius 0.04 cm
 
 
@@ -97,7 +97,7 @@
 ### Variables for Diffusion and Current in the GAS 50 V/cm
 /Actions/RTDManager/Wvalue 26.4 # eV
 /Actions/RTDManager/Efield 50 # V/cm
-/Actions/RTDManager/Driftz 2 # cm
+/Actions/RTDManager/Driftz 1 # cm
 /Actions/RTDManager/E_vel 200000 # cm/s
 /Actions/RTDManager/DiffusionL 1313.31 #cm^2/s
 /Actions/RTDManager/DiffusionT 8503.548 #cm^2/s

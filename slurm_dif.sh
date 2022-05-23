@@ -18,7 +18,7 @@ outputDir="/media/ilker/writable/Diffusion"
 PathToG4Executable="/home/ilker/Projects/QPIX/Diffusion/Build/app/G4_QPIX "
 
 ## Events
-NumberOfEvents=100
+NumberOfEvents=1000
 # particle type
 # e-, e+, mu-, mu+, neutron, proton, anti_proton, pi-, pi+, pi0, kaon-, kaon+,
 # gamma, opticalphoton, ...
@@ -28,11 +28,11 @@ ParticleEnergy=5.4
 
 ## Pressure in bar,and Driftz in cm
 Pressure=1
-Driftz=1
+Driftz=10
 
 ### RTDCode
 RTDCodeOn="true"
-PixelStepX=6
+PixelStepX=7
 PixelStepY=0.5
 
 ## EField V/cm ,DL in cm^2/s, DT in cm^2/s,and Drift Vel in cm/s
@@ -44,9 +44,9 @@ DriftVel=200000
 
 ## Naming Macro and Root Files
 NAME="${Particle}_${SEED}"
-OUT="${NAME}_${Pressure}_bar_${EField}_Vcm-1.root"
-InitMACRO="${NAME}_${Pressure}_bar_${EField}_Vcm-1_init.mac"
-configMACRO="${NAME}_${Pressure}_bar_${EField}_Vcm-1_config.mac"
+OUT="${NAME}_${Pressure}_bar_${EField}_Vcm-1_${Driftz}.root"
+InitMACRO="${NAME}_${Pressure}_bar_${EField}_Vcm-1_${Driftz}_init.mac"
+configMACRO="${NAME}_${Pressure}_bar_${EField}_Vcm-1_${Driftz}_config.mac"
 
 
 ## Paths to the Filles
