@@ -2,8 +2,8 @@
 // Created by ilker on 1/9/22.
 //
 
-#ifndef G4QPIX_UTA_TPC_PARTICLEGENERATOR_H
-#define G4QPIX_UTA_TPC_PARTICLEGENERATOR_H
+#ifndef G4QPIX_PARTICLEGENERATOR_H
+#define G4QPIX_PARTICLEGENERATOR_H
 // GEANT4 includes
 
 #include <G4VPrimaryGenerator.hh>
@@ -21,10 +21,10 @@ class G4Event;
 class G4GenericMessenger;
 class G4ParticleDefinition;
 
-class UTA_TPC_ParticleGenerator:public G4VPrimaryGenerator {
+class ParticleGenerator: public G4VPrimaryGenerator {
 public:
-    UTA_TPC_ParticleGenerator();
-    ~UTA_TPC_ParticleGenerator();
+    ParticleGenerator();
+    ~ParticleGenerator();
     virtual void GeneratePrimaries(G4Event*);
     void GeneratePrimaryVertex(G4Event*);
 
@@ -47,4 +47,4 @@ private:
 };
 
 
-#endif //G4QPIX_UTA_TPC_PARTICLEGENERATOR_H
+#endif //G4QPIX_PARTICLEGENERATOR_H

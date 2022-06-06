@@ -2,8 +2,8 @@
 // Created by ilker on 1/5/22.
 //
 
-#ifndef G4QPIX_DIFFUSIONGENERATOR_H
-#define G4QPIX_DIFFUSIONGENERATOR_H
+#ifndef G4QPIX_IONGENERATOR_H
+#define G4QPIX_IONGENERATOR_H
 
 // GEANT4 includes
 #include <G4VPrimaryGenerator.hh>
@@ -17,10 +17,10 @@
 class G4ParticleDefinition;
 class G4GenericMessenger;
 class BaseGeometry;
-class DiffusionGenerator : public G4VPrimaryGenerator{
+class IonGenerator : public G4VPrimaryGenerator{
 public:
-    DiffusionGenerator();
-     ~DiffusionGenerator();
+    IonGenerator();
+     ~IonGenerator();
     //virtual void GeneratePrimaries(G4Event*);
     //virtual void GENIEGeneratePrimaries(G4Event*);
 
@@ -52,4 +52,4 @@ private:
     const BaseGeometry* geo_;
 };
 
-#endif //G4QPIX_DIFFUSIONGENERATOR_H
+#endif //G4QPIX_IONGENERATOR_H

@@ -3,7 +3,7 @@
 // This is  Austin's Default Generator of UTA TPC
 //
 
-#include "UTA_TPC_ParticleGenerator.h"
+#include "ParticleGenerator.h"
 #include "FactoryBase.h"
 #include "BaseGeometry.h"
 // Q-Pix includes
@@ -38,13 +38,13 @@
 // C++ includes
 #include <stdlib.h>
 #include <math.h>
-REGISTER_CLASS(UTA_TPC_ParticleGenerator, G4VPrimaryGenerator)
-UTA_TPC_ParticleGenerator::UTA_TPC_ParticleGenerator()
+REGISTER_CLASS(ParticleGenerator, G4VPrimaryGenerator)
+ParticleGenerator::ParticleGenerator()
         : G4VPrimaryGenerator(),
           decay_at_time_zero_(false)
 // Detector_Geometry_("NAPA")
 {
-    msg_ = new G4GenericMessenger(this, "/Generator/UTA_TPC_ParticleGenerator/", "Control commands of the ion primary generator.");
+    msg_ = new G4GenericMessenger(this, "/Generator/ParticleGenerator/", "Control commands of the ion primary generator.");
     msg_->DeclareProperty("Particle_Type", Particle_Type_,  "which particle?");
     msg_->DeclareProperty("decay_at_time_zero", decay_at_time_zero_,
                           "Set to true to make unstable isotopes decay at t=0.");
@@ -56,7 +56,7 @@ UTA_TPC_ParticleGenerator::UTA_TPC_ParticleGenerator()
 
 
 }
-UTA_TPC_ParticleGenerator::~UTA_TPC_ParticleGenerator()
+ParticleGenerator::~ParticleGenerator()
 {
     delete msg_;
     delete particle_gun_;
@@ -65,7 +65,7 @@ UTA_TPC_ParticleGenerator::~UTA_TPC_ParticleGenerator()
 }
 
 
-void UTA_TPC_ParticleGenerator::GeneratePrimaries(G4Event* event)
+void ParticleGenerator::GeneratePrimaries(G4Event* event)
 {
     // get MC truth manager
     MCTruthManager * mc_truth_manager = MCTruthManager::Instance();
@@ -146,6 +146,6 @@ void UTA_TPC_ParticleGenerator::GeneratePrimaries(G4Event* event)
 
 }
 
-void UTA_TPC_ParticleGenerator::GeneratePrimaryVertex(G4Event * event) {
+void ParticleGenerator::GeneratePrimaryVertex(G4Event * event) {
     GeneratePrimaries(event);
 }

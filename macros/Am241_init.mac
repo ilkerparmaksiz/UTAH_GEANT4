@@ -2,7 +2,7 @@
 /QPIX/RegisterGeometry DiffusionGeometry
 
 #Generator
-/QPIX/RegisterGenerator DiffusionGenerator
+/QPIX/RegisterGenerator IonGenerator
 
 #Actions
 /QPIX/RegisterTrackingAction TrackingAction

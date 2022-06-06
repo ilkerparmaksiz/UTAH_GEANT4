@@ -2,7 +2,7 @@
 // Created by ilker on 1/5/22.
 //
 
-#include "DiffusionGenerator.h"
+#include "IonGenerator.h"
 #include "BaseGeometry.h"
 #include "DetectorConstruction.h"
 #include "FactoryBase.h"
@@ -33,20 +33,20 @@
 #include <stdlib.h>
 #include <math.h>
 
-REGISTER_CLASS(DiffusionGenerator, G4VPrimaryGenerator)
+REGISTER_CLASS(IonGenerator, G4VPrimaryGenerator)
 
-DiffusionGenerator::DiffusionGenerator(): G4VPrimaryGenerator(),
-                                          atomic_number_(0),
-                                          atomic_mass_(0),
-                                          energy_level_(0.),
-                                          decay_at_time_zero_(true),
-                                          Event_window_(0),
-                                          N_Decays_per_s_(0.),
-                                          region_(""),
-                                          NDecays(1)//,
+IonGenerator::IonGenerator(): G4VPrimaryGenerator(),
+                              atomic_number_(0),
+                              atomic_mass_(0),
+                              energy_level_(0.),
+                              decay_at_time_zero_(true),
+                              Event_window_(0),
+                              N_Decays_per_s_(0.),
+                              region_(""),
+                              NDecays(1)//,
 // Detector_Geometry_("NAPA")
 {
-    msg_ = new G4GenericMessenger(this, "/Generator/DiffusionGenerator/", "Control commands of the ion primary generator.");
+    msg_ = new G4GenericMessenger(this, "/Generator/IonGenerator/", "Control commands of the ion primary generator.");
     msg_->DeclareProperty("AtomicNumber",atomic_number_,"Atomic Number of the isotope ");
     msg_->DeclareProperty("AtomicMass",atomic_mass_,"Atomic Mass of the isotope ");
     msg_->DeclareProperty("DecayRate",N_Decays_per_s_,"Decay Rate in Decays/s(Bq) ");
@@ -59,15 +59,15 @@ DiffusionGenerator::DiffusionGenerator(): G4VPrimaryGenerator(),
     const DetectorConstruction* detconst = dynamic_cast<const DetectorConstruction*>
     (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
     if (detconst) geo_  = detconst->GetGeometry();
-    else G4Exception("[DiffusionGenerator]", "DiffusionGenerator()", FatalException, "Unable to load geometry.");
+    else G4Exception("[IonGenerator]", "IonGenerator()", FatalException, "Unable to load geometry.");
 }
 
-DiffusionGenerator::~DiffusionGenerator()
+IonGenerator::~IonGenerator()
 {
     delete msg_;
 }
 
-/*void DiffusionGenerator::GeneratePrimaries(G4Event* event)
+/*void IonGenerator::GeneratePrimaries(G4Event* event)
 {
     // get MC truth manager
     MCTruthManager * mc_truth_manager = MCTruthManager::Instance();
@@ -131,9 +131,9 @@ DiffusionGenerator::~DiffusionGenerator()
 
 
 }*/
-G4ParticleDefinition * DiffusionGenerator::IonDefinition() {
+G4ParticleDefinition * IonGenerator::IonDefinition() {
     G4ParticleDefinition * pdef= G4IonTable::GetIonTable()->GetIon(atomic_number_,atomic_mass_,energy_level_);
-    if (!pdef) G4Exception("DiffusionGenerator","IonDefinition()",FatalException,"Could not find the ion");
+    if (!pdef) G4Exception("IonGenerator","IonDefinition()",FatalException,"Could not find the ion");
     // Unstable ions decay by default at a random time t sampled from an exponential
     // decay distribution proportional to their mean lifetime. This, even for
     // not so long-lived nuclides, pushes the global time of the event to scales
@@ -146,7 +146,7 @@ G4ParticleDefinition * DiffusionGenerator::IonDefinition() {
 
     return pdef;
 }
-void DiffusionGenerator::GeneratePrimaryVertex(G4Event* event)
+void IonGenerator::GeneratePrimaryVertex(G4Event* event)
 {
 
     //Converting nCi to Bq 1nCi to 37 Bq
@@ -179,7 +179,7 @@ void DiffusionGenerator::GeneratePrimaryVertex(G4Event* event)
     }
 
 }
-void DiffusionGenerator::EventsWithWindow(G4Event*event, G4double decay_time){
+void IonGenerator::EventsWithWindow(G4Event*event, G4double decay_time){
     // Pointer declared as static so that it gets allocated only once
     // (i.e. the ion definition is only looked up in the first event).
     static G4ParticleDefinition* pdef = IonDefinition();
@@ -203,7 +203,7 @@ void DiffusionGenerator::EventsWithWindow(G4Event*event, G4double decay_time){
 
 
 
-void DiffusionGenerator::SavetheTruth(G4PrimaryParticle *const particle_gun_ , G4ThreeVector  const pos){
+void IonGenerator::SavetheTruth(G4PrimaryParticle *const particle_gun_ , G4ThreeVector  const pos){
 
     // get MC truth manager
     MCTruthManager * mc_truth_manager = MCTruthManager::Instance();

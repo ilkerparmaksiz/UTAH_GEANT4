@@ -14,7 +14,7 @@ SET(SRC BaseGeometry.h
         MCTruthManager.cpp
         MCParticle.cpp
         DiffusionGeometry.cpp
-        DiffusionGenerator.cpp
+        IonGenerator.cpp
         DetectorConstruction.cpp
         PrimaryGeneration.cpp
         RunAction.cpp
@@ -30,7 +30,7 @@ SET(SRC BaseGeometry.h
         PmtSD.cpp
         GenericPhotosensor.cpp
         UTA_TPC_Geometry.cpp
-        UTA_TPC_ParticleGenerator.cpp
+        ParticleGenerator.cpp
         QPIX_App.cpp
         BatchSession.cpp
         RTDCodeManager.cpp

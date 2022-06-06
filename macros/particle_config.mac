@@ -4,12 +4,12 @@
 /tracking/verbose 0
 # output path
 #/QPIX/Action/RunAction/root_output /media/ilker/writable/Diffusion_Measurement/alpha_2cm_50Vcm_1bar_.root
-/QPIX/Action/RunAction/root_output  /media/ilker/writable/Diffusion_Measurement/Alpha_1bar_2cm_25Vcm_Pixels_test.root
+/QPIX/Action/RunAction/root_output  /media/ilker/writable/Diffusion_Measurement/Alpha_1bar_10cm_50Vcm_2_5_Degreev2.root
 
 #/Geometry/DiffusionGeometry/MaterialName LAr
 
 #GEOMETRY
-/Geometry/DiffusionGeometry/world_size 1 m
+/Geometry/DiffusionGeometry/world_size 100 cm
 /Geometry/DiffusionGeometry/MaterialName GasAr
 /Geometry/DiffusionGeometry/Pressure 1 bar
 /Geometry/DiffusionGeometry/Temperature 300 kelvin
@@ -46,7 +46,7 @@
 
 
 # particle type
-# e-, e+, mu-, mu+, neutron, proton, anti_proton, pi-, pi+, pi0, kaon-, kaon+,
+# e-, e+, mu-, mu+, neutron, proton, anti_proton, pi-, pi+, pi0, kaon-, kaon+
 # gamma, opticalphoton, ...
 
 ### Generator Related Settings
@@ -72,8 +72,14 @@
 # Circular Source
 /gps/pos/type Plane
 /gps/pos/shape Circle
-/gps/pos/centre 7 4 1 cm  ## Change the z position
-/gps/pos/radius 0.04 cm
+/gps/pos/centre 7 4 10 cm  ## Change the z position
+#/gps/pos/radius 0.04 cm
+/gps/pos/radius 1.25 mm
+/gps/ang/type iso
+/gps/ang/maxtheta 2.5 degree
+/gps/ang/mintheta 0 degree
+/gps/ang/rot1 0 1 0
+/gps/ang/rot2 0 0 1
 
 
 
@@ -97,7 +103,7 @@
 ### Variables for Diffusion and Current in the GAS 50 V/cm
 /Actions/RTDManager/Wvalue 26.4 # eV
 /Actions/RTDManager/Efield 50 # V/cm
-/Actions/RTDManager/Driftz 1 # cm
+/Actions/RTDManager/Driftz 2 # cm
 /Actions/RTDManager/E_vel 200000 # cm/s
 /Actions/RTDManager/DiffusionL 1313.31 #cm^2/s
 /Actions/RTDManager/DiffusionT 8503.548 #cm^2/s
